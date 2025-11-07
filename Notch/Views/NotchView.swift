@@ -28,11 +28,51 @@ struct NotchView: View {
     @State private var hoverCollapseTask: Task<Void, Never>?
     @State private var isDraggingFile = false
     @State private var isDraggingFromNotch = false
+    @State private var showCalculator = false
+    @State private var calculatorKeyPressed: String? = nil
+    @FocusState private var isFocused: Bool
 
     var body: some View {
         notchContainer
             .background(.clear)
-            .padding(30)
+            .focusable()
+            .focused($isFocused)
+            .onKeyPress { keyPress in
+                // Only handle keys when expanded
+                guard notchState == .expanded else { return .ignored }
+
+                let key = keyPress.characters
+
+                // Check if this is a calculator key
+                let calculatorKeys = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                                     ".", "+", "-", "*", "/", "="]
+
+                if calculatorKeys.contains(key) ||
+                   keyPress.key == .return ||
+                   keyPress.key == .escape ||
+                   keyPress.key == .delete {
+
+                    // Auto-switch to calculator if not shown
+                    if !showCalculator {
+                        showCalculator = true
+                    }
+
+                    // Pass the key to calculator
+                    if keyPress.key == .return {
+                        calculatorKeyPressed = "\r"
+                    } else if keyPress.key == .escape {
+                        calculatorKeyPressed = "\u{1B}"
+                    } else if keyPress.key == .delete {
+                        calculatorKeyPressed = "\u{7F}"
+                    } else {
+                        calculatorKeyPressed = key
+                    }
+
+                    return .handled
+                }
+
+                return .ignored
+            }
             .onHover { hovering in
                 hoverCollapseTask?.cancel()
 
@@ -40,6 +80,8 @@ struct NotchView: View {
                     withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
                         isHovering = true
                         notchState = .expanded
+                        // Auto-focus when hovering
+                        isFocused = true
                     }
                 } else {
                     hoverCollapseTask = Task {
@@ -50,6 +92,7 @@ struct NotchView: View {
                             isHovering = false
                             if !isDraggingFile {
                                 notchState = .collapsed
+                                showCalculator = false  // Reset calculator state on collapse
                             }
                         }
                     }
@@ -62,7 +105,6 @@ struct NotchView: View {
                 notchState: $notchState,
                 isDraggingFromNotch: $isDraggingFromNotch
             ))
-            .padding(-30)
             .onReceive(NotificationCenter.default.publisher(for: .draggingFromNotch)) { _ in
                 isDraggingFromNotch = true
             }
@@ -80,10 +122,20 @@ struct NotchView: View {
     private var notchContainer: some View {
         ZStack {
             // Black background
-            RoundedRectangle(cornerRadius: notchState == .collapsed ? 18 : 30)
+            UnevenRoundedRectangle(
+                topLeadingRadius: 0,
+                bottomLeadingRadius: notchState == .collapsed ? 18 : 24,
+                bottomTrailingRadius: notchState == .collapsed ? 18 : 24,
+                topTrailingRadius: 0
+            )
                 .fill(Color.black)
                 .overlay {
-                    RoundedRectangle(cornerRadius: notchState == .collapsed ? 18 : 30)
+                    UnevenRoundedRectangle(
+                        topLeadingRadius: 0,
+                        bottomLeadingRadius: notchState == .collapsed ? 18 : 24,
+                        bottomTrailingRadius: notchState == .collapsed ? 18 : 24,
+                        topTrailingRadius: 0
+                    )
                         .stroke(
                             LinearGradient(
                                 colors: [.white.opacity(0.2), .white.opacity(0.05)],
@@ -93,10 +145,7 @@ struct NotchView: View {
                             lineWidth: notchState == .collapsed ? 0.5 : 1
                         )
                 }
-                .shadow(color: .black.opacity(notchState == .collapsed ? 0.3 : 0.5),
-                       radius: notchState == .collapsed ? 10 : 20,
-                       x: 0,
-                       y: notchState == .collapsed ? 5 : 10)
+
 
             // Content
             VStack(spacing: 0) {
@@ -109,8 +158,8 @@ struct NotchView: View {
             .padding()
         }
         .frame(
-            width: notchState == .collapsed ? 200 : 680,
-            height: notchState == .collapsed ? 32 : 200
+            width: notchState == .collapsed ? 310 : 680,
+            height: notchState == .collapsed ? 40 : 300
         )
         .animation(.spring(response: 0.5, dampingFraction: 0.7), value: notchState)
     }
@@ -118,6 +167,21 @@ struct NotchView: View {
     // MARK: - Collapsed State
     private var collapsedContent: some View {
         HStack(spacing: 12) {
+            // Calculator button on left
+            Button(action: {
+                showCalculator = true
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                    notchState = .expanded
+                }
+            }) {
+                Image(systemName: "function")
+                    .font(.system(size: 12))
+                    .foregroundColor(.white.opacity(0.8))
+                    .frame(width: 24, height: 24)
+            }
+            .buttonStyle(.plain)
+            .contentShape(Rectangle())
+
             Spacer()
 
             // File count indicator on right
@@ -134,7 +198,59 @@ struct NotchView: View {
 
     // MARK: - Expanded State
     private var expandedContent: some View {
-        FileManagerView(isDropTargeted: $isDropTargeted)
+        VStack(spacing: 0) {
+            // Top bar with switch button
+            HStack {
+                if showCalculator {
+                    Button(action: {
+                        showCalculator = false
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.left")
+                                .font(.system(size: 10))
+                            Text("Back to files")
+                                .font(.system(size: 11))
+                        }
+                        .foregroundColor(.white.opacity(0.7))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.white.opacity(0.1))
+                        )
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    Button(action: {
+                        showCalculator = true
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "function")
+                                .font(.system(size: 10))
+                            Text("Calculator")
+                                .font(.system(size: 11))
+                        }
+                        .foregroundColor(.white.opacity(0.7))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(Color.white.opacity(0.1))
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+                Spacer()
+            }
+            .padding(.bottom, 8)
+
+            // Content
+            if showCalculator {
+                CalculatorView(keyPressed: $calculatorKeyPressed)
+            } else {
+                FileManagerView(isDropTargeted: $isDropTargeted)
+            }
+        }
     }
 }
 

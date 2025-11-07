@@ -24,12 +24,15 @@ class NotchPositioner {
         // Calculate center position horizontally
         let xPosition = (screenFrame.width - windowFrame.width) / 2 + screenFrame.origin.x
 
-        // Position just below the menu bar
-        // Menu bar height is typically 24-25pt
-        let menuBarHeight: CGFloat = 25
-        var yPosition = screenFrame.maxY - menuBarHeight - windowFrame.height
+        // Position at the very top of screen (in notch area)
+        let notchInfo = getNotchInfo()
+        let yPosition = screenFrame.maxY - windowFrame.height
 
-        print("📍 Positioning below menu bar at y=\(yPosition)")
+        if notchInfo.hasNotch {
+            print("📍 Positioning in notch area (notch height: \(notchInfo.height)pt) at y=\(yPosition)")
+        } else {
+            print("📍 Positioning at top of screen (no notch) at y=\(yPosition)")
+        }
 
         let origin = NSPoint(x: xPosition, y: yPosition)
         print("📍 Final position: \(origin)")
@@ -54,14 +57,14 @@ class NotchPositioner {
     /// Calculate ideal window width based on screen size
     static func calculateIdealWidth(for state: NotchState) -> CGFloat {
         guard let screen = NSScreen.main else {
-            return state == .collapsed ? 218 : 680
+            return state == .collapsed ? 300 : 680
         }
 
         let screenWidth = screen.frame.width
 
         switch state {
         case .collapsed:
-            return min(218, screenWidth * 0.2)
+            return min(300, screenWidth * 0.2)
         case .expanded:
             return min(680, screenWidth * 0.5)
         }
@@ -73,9 +76,9 @@ extension NotchState {
     var windowSize: NSSize {
         switch self {
         case .collapsed:
-            return NSSize(width: 200, height: 32)  // Fit into physical notch (~37pt)
+            return NSSize(width: 310, height: 40)  // Extended width for side buttons
         case .expanded:
-            return NSSize(width: 680, height: 200)
+            return NSSize(width: 680, height: 300)
         }
     }
 }

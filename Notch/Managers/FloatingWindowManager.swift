@@ -10,6 +10,13 @@ import SwiftUI
 import SwiftData
 import Combine
 
+// Custom NSPanel subclass that can become key window for keyboard events
+class KeyablePanel: NSPanel {
+    override var canBecomeKey: Bool {
+        return true
+    }
+}
+
 class FloatingWindowManager: ObservableObject {
     static let shared = FloatingWindowManager()
 
@@ -26,8 +33,9 @@ class FloatingWindowManager: ObservableObject {
 
         // Create panel with initial collapsed size
         // Using .borderless and .fullSizeContentView for floating appearance
-        let panel = NSPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 218, height: 40),
+        // Using custom KeyablePanel to enable keyboard events
+        let panel = KeyablePanel(
+            contentRect: NSRect(x: 0, y: 0, width: 310, height: 40),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
@@ -40,12 +48,14 @@ class FloatingWindowManager: ObservableObject {
         panel.isOpaque = false
         panel.hasShadow = false
 
-        // Floating panel - lower level so menu bar icons can be above it
-        panel.level = .floating
+        // Set window level above menu bar to appear in notch area
+        // Using mainMenu level + 2 to ensure it's above menu bar
+        panel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.mainMenuWindow)) + 2)
         panel.collectionBehavior = [
             .canJoinAllSpaces,          // Visible on all spaces/desktops
             .stationary,                 // Doesn't move when switching spaces
-            .fullScreenAuxiliary         // Visible in fullscreen mode
+            .fullScreenAuxiliary,        // Visible in fullscreen mode
+            .ignoresCycle                // Don't participate in window cycling
         ]
 
         // Interaction settings
@@ -106,6 +116,10 @@ class FloatingWindowManager: ObservableObject {
         print("✅ Panel should be visible now at: \(panel?.frame ?? .zero)")
     }
 
+    func makeKey() {
+        panel?.makeKey()
+    }
+
     func hide() {
         print("🙈 Hiding panel...")
         panel?.orderOut(nil)
@@ -124,7 +138,6 @@ class FloatingWindowManager: ObservableObject {
         guard let panel = panel, let screen = NSScreen.main else { return }
 
         var newFrame = panel.frame
-        let widthDiff = width - newFrame.width
         let heightDiff = height - newFrame.height
 
         newFrame.size.width = width

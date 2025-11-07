@@ -51,19 +51,40 @@ struct FileDropDelegate: DropDelegate {
         }
 
         let items = info.itemProviders(for: [.fileURL])
+        var hasSuccessfulDrop = false
 
         for item in items {
+            // Try to load as file URL with proper error handling
             item.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { (urlData, error) in
                 DispatchQueue.main.async {
+                    // Check for errors from file promise resolution
+                    if let error = error {
+                        // This error is expected for some file promises that can't be resolved
+                        // Only log in debug mode to avoid console spam
+                        #if DEBUG
+                        print("⚠️ Could not load file URL (this is normal for some apps): \(error.localizedDescription)")
+                        #endif
+                        return
+                    }
+
+                    // Try to create URL from the data
                     if let urlData = urlData as? Data,
                        let url = URL(dataRepresentation: urlData, relativeTo: nil) {
                         addFile(from: url)
+                    } else if let url = urlData as? URL {
+                        // Some providers return URL directly
+                        addFile(from: url)
+                    } else {
+                        #if DEBUG
+                        print("⚠️ Could not create URL from dropped item data")
+                        #endif
                     }
                 }
             }
+            hasSuccessfulDrop = true
         }
 
-        return true
+        return hasSuccessfulDrop
     }
 
     private func addFile(from url: URL) {

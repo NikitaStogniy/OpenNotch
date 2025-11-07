@@ -22,27 +22,14 @@ struct FileManagerView: View {
     @State private var isDraggingFromNotch = false
 
     var body: some View {
-        VStack(spacing: 12) {
-            HStack {
-                Text("Quick Files")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                Spacer()
-                Button(action: {}) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.title3)
-                        .foregroundColor(.white)
-                }
-                .buttonStyle(.plain)
-            }
-
+        VStack(spacing: 2) {
             if storedFiles.isEmpty {
                 dropZoneView
             } else {
                 fileListView
             }
         }
-        .padding()
+        .padding(2)
         .onReceive(NotificationCenter.default.publisher(for: .draggingFromNotch)) { _ in
             isDraggingFromNotch = true
         }
@@ -52,7 +39,7 @@ struct FileManagerView: View {
     }
 
     private var dropZoneView: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 2) {
             Image(systemName: isDropTargeted ? "folder.badge.plus.fill" : "folder.badge.plus")
                 .font(.system(size: 40))
                 .foregroundColor(isDropTargeted ? .blue : .white.opacity(0.5))
@@ -61,8 +48,7 @@ struct FileManagerView: View {
                 .font(.caption)
                 .foregroundColor(.white.opacity(0.6))
         }
-        .frame(maxWidth: .infinity)
-        .frame(height: 120)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(isDropTargeted ? .blue.opacity(0.2) : .white.opacity(0.05))
         .cornerRadius(12)
         .overlay(
@@ -76,13 +62,13 @@ struct FileManagerView: View {
 
     private var fileListView: some View {
         ScrollView {
-            LazyVStack(spacing: 8) {
+            LazyVStack(spacing: 2) {
                 ForEach(storedFiles.prefix(3)) { file in
                     FileRowView(file: file, modelContext: modelContext)
                 }
             }
         }
-        .frame(height: 120)
+        .frame(maxHeight: .infinity)
         .onDrop(of: [.fileURL], delegate: FileDropDelegate(modelContext: modelContext, isTargeted: $isDropTargeted, isDraggingFromNotch: isDraggingFromNotch))
     }
 }
@@ -96,7 +82,7 @@ struct FileRowView: View {
     @State private var isDraggingFromNotch = false
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 2) {
             Image(systemName: file.fileIcon)
                 .font(.title3)
                 .foregroundColor(.blue)
@@ -127,7 +113,7 @@ struct FileRowView: View {
             }
             .buttonStyle(.plain)
         }
-        .padding(8)
+        .padding(2)
         .background(isDragging ? .blue.opacity(0.2) : (isHovering ? .white.opacity(0.1) : .white.opacity(0.05)))
         .cornerRadius(8)
         .scaleEffect(isDragging ? 0.95 : (isHovering ? 1.02 : 1.0))
