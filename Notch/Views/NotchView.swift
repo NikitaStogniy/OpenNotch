@@ -31,6 +31,7 @@ struct NotchView: View {
     @State private var showCalculator = false
     @State private var calculatorKeyPressed: String? = nil
     @FocusState private var isFocused: Bool
+    @State private var lastEscapeTime: Date? = nil
 
     var body: some View {
         notchContainer
@@ -57,11 +58,29 @@ struct NotchView: View {
                         showCalculator = true
                     }
 
+                    // Handle double ESC to exit calculator
+                    if keyPress.key == .escape && showCalculator {
+                        let now = Date()
+                        if let lastEscape = lastEscapeTime,
+                           now.timeIntervalSince(lastEscape) < 0.5 {
+                            // Double ESC - exit calculator
+                            showCalculator = false
+                            lastEscapeTime = nil
+                            return .handled
+                        } else {
+                            // First ESC - clear calculator
+                            lastEscapeTime = now
+                            calculatorKeyPressed = "\u{1B}"
+                            return .handled
+                        }
+                    }
+
+                    // Reset escape timer for non-escape keys
+                    lastEscapeTime = nil
+
                     // Pass the key to calculator
                     if keyPress.key == .return {
                         calculatorKeyPressed = "\r"
-                    } else if keyPress.key == .escape {
-                        calculatorKeyPressed = "\u{1B}"
                     } else if keyPress.key == .delete {
                         calculatorKeyPressed = "\u{7F}"
                     } else {
@@ -77,7 +96,7 @@ struct NotchView: View {
                 hoverCollapseTask?.cancel()
 
                 if hovering {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                    withAnimation(.easeOut(duration: 0.3)) {
                         isHovering = true
                         notchState = .expanded
                         // Auto-focus when hovering
@@ -88,11 +107,12 @@ struct NotchView: View {
                         try? await Task.sleep(nanoseconds: 250_000_000)
                         guard !Task.isCancelled else { return }
 
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
                             isHovering = false
                             if !isDraggingFile {
                                 notchState = .collapsed
                                 showCalculator = false  // Reset calculator state on collapse
+                                lastEscapeTime = nil  // Reset escape timer
                             }
                         }
                     }
@@ -159,9 +179,9 @@ struct NotchView: View {
         }
         .frame(
             width: notchState == .collapsed ? 310 : 680,
-            height: notchState == .collapsed ? 40 : 300
+            height: notchState == .collapsed ? 40 : 360
         )
-        .animation(.spring(response: 0.5, dampingFraction: 0.7), value: notchState)
+        .animation(.easeInOut(duration: 0.35), value: notchState)
     }
 
     // MARK: - Collapsed State
@@ -201,56 +221,39 @@ struct NotchView: View {
         VStack(spacing: 0) {
             // Top bar with switch button
             HStack {
-                if showCalculator {
-                    Button(action: {
-                        showCalculator = false
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "arrow.left")
-                                .font(.system(size: 10))
-                            Text("Back to files")
-                                .font(.system(size: 11))
-                        }
-                        .foregroundColor(.white.opacity(0.7))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(Color.white.opacity(0.1))
-                        )
+                Button(action: {
+                    showCalculator.toggle()
+                }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: showCalculator ? "arrow.left" : "function")
+                            .font(.system(size: 10))
+                        Text(showCalculator ? "Back to files" : "Calculator")
+                            .font(.system(size: 11))
                     }
-                    .buttonStyle(.plain)
-                } else {
-                    Button(action: {
-                        showCalculator = true
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "function")
-                                .font(.system(size: 10))
-                            Text("Calculator")
-                                .font(.system(size: 11))
-                        }
-                        .foregroundColor(.white.opacity(0.7))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(Color.white.opacity(0.1))
-                        )
-                    }
-                    .buttonStyle(.plain)
+                    .foregroundColor(.white.opacity(0.7))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.white.opacity(0.1))
+                    )
                 }
+                .buttonStyle(.plain)
                 Spacer()
             }
             .padding(.bottom, 8)
+            .frame(height: 28)
 
             // Content
             if showCalculator {
                 CalculatorView(keyPressed: $calculatorKeyPressed)
+                    .transition(.opacity)
             } else {
                 FileManagerView(isDropTargeted: $isDropTargeted)
+                    .transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: showCalculator)
     }
 }
 

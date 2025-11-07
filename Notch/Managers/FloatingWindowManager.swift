@@ -153,8 +153,9 @@ class FloatingWindowManager: ObservableObject {
 
         if animated {
             NSAnimationContext.runAnimationGroup { context in
-                context.duration = 0.4
+                context.duration = 0.3
                 context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+                context.allowsImplicitAnimation = true
                 panel.animator().setFrame(newFrame, display: true)
             }
         } else {

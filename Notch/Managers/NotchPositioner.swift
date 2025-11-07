@@ -78,7 +78,7 @@ extension NotchState {
         case .collapsed:
             return NSSize(width: 310, height: 40)  // Extended width for side buttons
         case .expanded:
-            return NSSize(width: 680, height: 300)
+            return NSSize(width: 680, height: 360)
         }
     }
 }
