@@ -96,24 +96,20 @@ struct NotchView: View {
                 hoverCollapseTask?.cancel()
 
                 if hovering {
-                    withAnimation(.easeOut(duration: 0.3)) {
-                        isHovering = true
-                        notchState = .expanded
-                        // Auto-focus when hovering
-                        isFocused = true
-                    }
+                    isHovering = true
+                    notchState = .expanded
+                    // Auto-focus when hovering
+                    isFocused = true
                 } else {
                     hoverCollapseTask = Task {
                         try? await Task.sleep(nanoseconds: 250_000_000)
                         guard !Task.isCancelled else { return }
 
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            isHovering = false
-                            if !isDraggingFile {
-                                notchState = .collapsed
-                                showCalculator = false  // Reset calculator state on collapse
-                                lastEscapeTime = nil  // Reset escape timer
-                            }
+                        isHovering = false
+                        if !isDraggingFile {
+                            notchState = .collapsed
+                            showCalculator = false  // Reset calculator state on collapse
+                            lastEscapeTime = nil  // Reset escape timer
                         }
                     }
                 }
@@ -171,17 +167,19 @@ struct NotchView: View {
             VStack(spacing: 0) {
                 if notchState == .collapsed {
                     collapsedContent
+                        .transition(.opacity)
                 } else {
                     expandedContent
+                        .transition(.opacity)
                 }
             }
+            .animation(.easeOut(duration: 0.25), value: notchState)
             .padding()
         }
         .frame(
             width: notchState == .collapsed ? 310 : 680,
             height: notchState == .collapsed ? 40 : 360
         )
-        .animation(.easeInOut(duration: 0.35), value: notchState)
     }
 
     // MARK: - Collapsed State
@@ -190,9 +188,7 @@ struct NotchView: View {
             // Calculator button on left
             Button(action: {
                 showCalculator = true
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-                    notchState = .expanded
-                }
+                notchState = .expanded
             }) {
                 Image(systemName: "function")
                     .font(.system(size: 12))
@@ -245,15 +241,15 @@ struct NotchView: View {
             .frame(height: 28)
 
             // Content
-            if showCalculator {
-                CalculatorView(keyPressed: $calculatorKeyPressed)
-                    .transition(.opacity)
-            } else {
-                FileManagerView(isDropTargeted: $isDropTargeted)
-                    .transition(.opacity)
+            Group {
+                if showCalculator {
+                    CalculatorView(keyPressed: $calculatorKeyPressed)
+                } else {
+                    FileManagerView(isDropTargeted: $isDropTargeted)
+                }
             }
+            .animation(.easeInOut(duration: 0.2), value: showCalculator)
         }
-        .animation(.easeInOut(duration: 0.2), value: showCalculator)
     }
 }
 

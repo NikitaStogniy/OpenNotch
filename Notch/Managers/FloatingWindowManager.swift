@@ -152,12 +152,14 @@ class FloatingWindowManager: ObservableObject {
         newFrame.origin.y -= heightDiff
 
         if animated {
-            NSAnimationContext.runAnimationGroup { context in
-                context.duration = 0.3
-                context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-                context.allowsImplicitAnimation = true
+            NSAnimationContext.runAnimationGroup({ context in
+                context.duration = 0.35
+                context.timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0.1, 0.25, 1.0) // Custom easing
                 panel.animator().setFrame(newFrame, display: true)
-            }
+            }, completionHandler: {
+                // Ensure final position is set
+                panel.setFrame(newFrame, display: true)
+            })
         } else {
             panel.setFrame(newFrame, display: true)
         }
