@@ -1,0 +1,215 @@
+//
+//  MenuBarView.swift
+//  Notch
+//
+//  Created by Nikita Stogniy on 7/11/25.
+//
+
+import SwiftUI
+import SwiftData
+
+struct MenuBarView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var storedFiles: [StoredFile]
+    @StateObject private var windowManager = FloatingWindowManager.shared
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header
+            HStack {
+                Image(systemName: "music.note.list")
+                    .font(.title2)
+                    .foregroundColor(.blue)
+                Text("Notch")
+                    .font(.headline)
+                Spacer()
+            }
+            .padding()
+
+            Divider()
+
+            // Toggle Notch Visibility
+            Button(action: {
+                windowManager.toggle()
+            }) {
+                HStack {
+                    Image(systemName: windowManager.isVisible ? "eye.slash" : "eye")
+                    Text(windowManager.isVisible ? "Hide Notch" : "Show Notch")
+                    Spacer()
+                }
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+
+            Divider()
+
+            // Recent Files Section
+            if !storedFiles.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Recent Files")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+
+                    ForEach(storedFiles.prefix(3)) { file in
+                        MenuBarFileRow(file: file)
+                    }
+
+                    if storedFiles.count > 3 {
+                        Button(action: {}) {
+                            HStack {
+                                Text("View All (\(storedFiles.count))")
+                                    .font(.caption)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption2)
+                            }
+                            .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.horizontal)
+                        .padding(.vertical, 4)
+                    }
+                }
+
+                Divider()
+            }
+
+            // Quick Actions
+            VStack(spacing: 0) {
+                MenuBarButton(icon: "gearshape", title: "Settings") {
+                    showSettings()
+                }
+
+                MenuBarButton(icon: "info.circle", title: "About") {
+                    showAbout()
+                }
+            }
+
+            Divider()
+
+            // Quit Button
+            Button(action: {
+                NSApplication.shared.terminate(nil)
+            }) {
+                HStack {
+                    Image(systemName: "power")
+                        .foregroundColor(.red)
+                    Text("Quit Notch")
+                    Spacer()
+                }
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+        }
+        .frame(width: 250)
+    }
+
+    // MARK: - Actions
+    private func showSettings() {
+        let alert = NSAlert()
+        alert.messageText = "Settings"
+        alert.informativeText = "Notch Settings\n\nVersion: 1.0\n\nConfigure your notch appearance, behavior, and shortcuts."
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+
+    private func showAbout() {
+        let alert = NSAlert()
+        alert.messageText = "About Notch"
+        alert.informativeText = """
+        Notch - Interactive MacBook Notch Manager
+
+        Version: 1.0.0
+
+        A beautiful, animated notch interface for managing files and controlling music on your MacBook.
+
+        Created by Nikita Stogniy
+        © 2025
+        """
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+}
+
+// MARK: - Menu Bar File Row
+struct MenuBarFileRow: View {
+    let file: StoredFile
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: file.fileIcon)
+                .font(.caption)
+                .foregroundColor(.blue)
+                .frame(width: 20, height: 20)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(file.name)
+                    .font(.caption)
+                    .lineLimit(1)
+
+                Text(file.formattedFileSize)
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+
+            Spacer()
+
+            Button(action: {
+                // Open file
+                NSWorkspace.shared.open(file.fileURL)
+            }) {
+                Image(systemName: "arrow.up.forward.square")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 6)
+        .contentShape(Rectangle())
+        .onHover { hovering in
+            if hovering {
+                NSCursor.pointingHand.push()
+            } else {
+                NSCursor.pop()
+            }
+        }
+    }
+}
+
+// MARK: - Menu Bar Button
+struct MenuBarButton: View {
+    let icon: String
+    let title: String
+    let action: () -> Void
+
+    @State private var isHovering = false
+
+    var body: some View {
+        Button(action: action) {
+            HStack {
+                Image(systemName: icon)
+                Text(title)
+                Spacer()
+            }
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+        .background(isHovering ? Color.blue.opacity(0.1) : Color.clear)
+        .onHover { hovering in
+            isHovering = hovering
+        }
+    }
+}
+
+#Preview {
+    MenuBarView()
+        .modelContainer(for: StoredFile.self, inMemory: true)
+}
