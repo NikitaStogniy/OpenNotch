@@ -55,20 +55,51 @@ class HitTestContentView: NSView {
     weak var hitTestManager: HitTestManager?
 
     override func hitTest(_ point: NSPoint) -> NSView? {
+        print("🎯 [HitTestContentView] hitTest called with point: \(point)")
+        print("🎯 [HitTestContentView] bounds: \(bounds)")
+        print("🎯 [HitTestContentView] subviews count: \(subviews.count)")
+
         // If no hit test manager or no frame set yet, pass through to avoid blocking
         guard let manager = hitTestManager,
               manager.collapsedZoneFrame != nil else {
+            print("🎯 [HitTestContentView] No manager or frame - passing through")
             return nil
         }
 
         // Check if point is in active zone
-        if !manager.isInZone(point) {
+        let inZone = manager.isInZone(point)
+        print("🎯 [HitTestContentView] Point in zone: \(inZone)")
+
+        if !inZone {
             // Point outside active zone - pass through
+            print("🎯 [HitTestContentView] Point outside zone - passing through")
             return nil
         }
 
-        // Point inside active zone - normal hit testing
-        return super.hitTest(point)
+        // Point inside active zone - manually check subviews
+        // This is necessary because super.hitTest(point) doesn't properly
+        // forward events to NSHostingView for SwiftUI interactions
+        for (index, subview) in subviews.reversed().enumerated() {
+            print("🎯 [HitTestContentView] Checking subview \(index): \(type(of: subview))")
+            print("🎯 [HitTestContentView] Subview frame: \(subview.frame)")
+
+            // Convert point to subview's coordinate system
+            let convertedPoint = convert(point, to: subview)
+            print("🎯 [HitTestContentView] Converted point: \(convertedPoint)")
+            print("🎯 [HitTestContentView] Subview bounds: \(subview.bounds)")
+
+            // Let the subview handle hit testing (crucial for NSHostingView/SwiftUI)
+            if let hitView = subview.hitTest(convertedPoint) {
+                print("🎯 [HitTestContentView] ✅ Found hit view: \(type(of: hitView))")
+                return hitView
+            } else {
+                print("🎯 [HitTestContentView] ❌ No hit in subview")
+            }
+        }
+
+        // Point is in zone but not in any subview - return self
+        print("🎯 [HitTestContentView] Returning self")
+        return self
     }
 }
 
@@ -344,8 +375,26 @@ class FloatingWindowManager: ObservableObject {
 
     // Update the frame of notchContainer for mouse event handling
     func setNotchContainerFrame(_ frame: CGRect, notchState: NotchState) {
-        guard let panel = panel as? KeyablePanel else { return }
-        panel.setNotchContainerFrame(frame, notchState: notchState)
+        guard let panel = panel as? KeyablePanel,
+              let contentView = panel.contentView else { return }
+
+        // Convert from SwiftUI flipped coordinates to AppKit non-flipped coordinates
+        // SwiftUI: Y=0 at top, grows downward
+        // AppKit: Y=0 at bottom, grows upward
+        let contentHeight = contentView.bounds.height
+        let convertedFrame = CGRect(
+            x: frame.origin.x,
+            y: contentHeight - frame.origin.y - frame.height,
+            width: frame.width,
+            height: frame.height
+        )
+
+        print("📐 [FloatingWindowManager] Converting frame:")
+        print("  SwiftUI frame: \(frame)")
+        print("  AppKit frame: \(convertedFrame)")
+        print("  Content height: \(contentHeight)")
+
+        panel.setNotchContainerFrame(convertedFrame, notchState: notchState)
     }
 
     deinit {
