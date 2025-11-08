@@ -48,31 +48,18 @@ struct MenuBarView: View {
             // Recent Files Section
             if !storedFiles.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Recent Files")
+                    Text("Recent Files (\(storedFiles.count))")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .padding(.horizontal)
                         .padding(.top, 8)
 
-                    ForEach(storedFiles.prefix(3)) { file in
-                        MenuBarFileRow(file: file)
-                    }
-
-                    if storedFiles.count > 3 {
-                        Button(action: {}) {
-                            HStack {
-                                Text("View All (\(storedFiles.count))")
-                                    .font(.caption)
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(.caption2)
-                            }
-                            .foregroundColor(.secondary)
+                    ScrollView {
+                        ForEach(storedFiles) { file in
+                            MenuBarFileRow(file: file)
                         }
-                        .buttonStyle(.plain)
-                        .padding(.horizontal)
-                        .padding(.vertical, 4)
                     }
+                    .frame(maxHeight: 300)
                 }
 
                 Divider()

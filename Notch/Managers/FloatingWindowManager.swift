@@ -10,10 +10,116 @@ import SwiftUI
 import SwiftData
 import Combine
 
+// MARK: - Hit Testing Manager
+class HitTestManager {
+    var collapsedZoneFrame: CGRect?
+    var expandedZoneFrame: CGRect?
+    var currentState: NotchState = .collapsed
+    let expansionAmount: CGFloat = 15  // Expansion for easier interaction in expanded state
+
+    func setContainerFrame(_ frame: CGRect, notchState: NotchState) {
+        // Ignore invalid frames (zero or negative dimensions)
+        guard frame.width > 0 && frame.height > 0 else {
+            print("📏 [HitTestManager] Ignoring invalid frame: \(frame)")
+            return
+        }
+
+        collapsedZoneFrame = frame
+        expandedZoneFrame = frame
+        currentState = notchState
+        print("📏 [HitTestManager] setContainerFrame called with state: \(notchState), frame: \(frame)")
+    }
+
+    func getCurrentFrame() -> CGRect? {
+        switch currentState {
+        case .collapsed:
+            // In collapsed state, use exact frame (no expansion to avoid blocking other windows)
+            return collapsedZoneFrame
+        case .expanded:
+            // In expanded state, add expansion for easier interaction
+            guard let frame = expandedZoneFrame else { return nil }
+            return frame.insetBy(dx: -expansionAmount, dy: -expansionAmount)
+        }
+    }
+
+    func isInZone(_ location: CGPoint) -> Bool {
+        guard let frame = getCurrentFrame() else {
+            return true // Accept all if no frame set
+        }
+        return frame.contains(location)
+    }
+}
+
+// Custom content view with precise hit testing
+class HitTestContentView: NSView {
+    weak var hitTestManager: HitTestManager?
+
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        // If no hit test manager or no frame set yet, pass through to avoid blocking
+        guard let manager = hitTestManager,
+              manager.collapsedZoneFrame != nil else {
+            return nil
+        }
+
+        // Check if point is in active zone
+        if !manager.isInZone(point) {
+            // Point outside active zone - pass through
+            return nil
+        }
+
+        // Point inside active zone - normal hit testing
+        return super.hitTest(point)
+    }
+}
+
 // Custom NSPanel subclass that can become key window for keyboard events
 // and tracks mouse position to allow clicks through in non-interactive areas
-class KeyablePanel: NSPanel {
-    var notchContainerFrame: CGRect?
+class KeyablePanel: NSPanel, NSDraggingDestination {
+    private let hitTestManager = HitTestManager()
+    private var isCurrentlyDragging = false
+    private var trackingArea: NSTrackingArea?
+    private var customContentView: HitTestContentView?
+
+    // Update container frame (called from FloatingWindowManager)
+    func setNotchContainerFrame(_ frame: CGRect, notchState: NotchState) {
+        hitTestManager.setContainerFrame(frame, notchState: notchState)
+        updateTrackingArea()
+    }
+
+    // Update tracking area when notch frame changes
+    private func updateTrackingArea() {
+        guard let contentView = self.contentView else { return }
+
+        print("🎯 [KeyablePanel] updateTrackingArea called")
+        print("🎯 [KeyablePanel] contentView bounds: \(contentView.bounds)")
+
+        // Remove old tracking area
+        if let existingArea = trackingArea {
+            contentView.removeTrackingArea(existingArea)
+            print("🎯 [KeyablePanel] Removed old tracking area: \(existingArea.rect)")
+        }
+
+        // Get current frame based on notch state (collapsed = exact, expanded = with expansion)
+        guard let trackingFrame = hitTestManager.getCurrentFrame() else {
+            print("🎯 [KeyablePanel] No tracking frame available")
+            return
+        }
+
+        print("🎯 [KeyablePanel] HitTestManager current state: \(hitTestManager.currentState)")
+        print("🎯 [KeyablePanel] Creating tracking area with rect: \(trackingFrame)")
+
+        // Create new tracking area with state-appropriate frame
+        let newTrackingArea = NSTrackingArea(
+            rect: trackingFrame,
+            options: [.mouseEnteredAndExited, .activeAlways],
+            owner: self,
+            userInfo: nil
+        )
+
+        contentView.addTrackingArea(newTrackingArea)
+        trackingArea = newTrackingArea
+        print("🎯 [KeyablePanel] Tracking area created and added")
+    }
 
     override var canBecomeKey: Bool {
         return true
@@ -24,20 +130,58 @@ class KeyablePanel: NSPanel {
         set { }
     }
 
-    override func mouseMoved(with event: NSEvent) {
-        super.mouseMoved(with: event)
+    func setupDraggingDestination() {
+        self.registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
+    }
 
-        // Get mouse location in window coordinates
-        let mouseLocation = event.locationInWindow
+    // Setup custom content view with hit testing
+    func setupCustomContentView(hostingView: NSView) {
+        let customView = HitTestContentView()
+        customView.hitTestManager = hitTestManager
+        customView.wantsLayer = true
+        customView.layer?.masksToBounds = false
 
-        // Check if mouse is within notchContainer
-        if let containerFrame = notchContainerFrame {
-            let isInside = containerFrame.contains(mouseLocation)
-            ignoresMouseEvents = !isInside
-        } else {
-            // No container frame set, accept all events by default
-            ignoresMouseEvents = false
+        // Add hosting view as subview
+        customView.addSubview(hostingView)
+        hostingView.frame = customView.bounds
+        hostingView.autoresizingMask = [.width, .height]
+
+        self.contentView = customView
+        self.customContentView = customView
+    }
+
+    // MARK: - NSDraggingDestination Protocol
+
+    func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        let location = sender.draggingLocation
+
+        // Check if in zone first
+        guard hitTestManager.isInZone(location) else {
+            return []
         }
+
+        guard sender.draggingPasteboard.types?.contains(.fileURL) == true else {
+            return []
+        }
+
+        isCurrentlyDragging = true
+        return .copy
+    }
+
+    func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+        guard hitTestManager.isInZone(sender.draggingLocation) else {
+            return []
+        }
+        return .copy
+    }
+
+    func draggingExited(_ sender: NSDraggingInfo?) {
+        isCurrentlyDragging = false
+    }
+
+    func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        isCurrentlyDragging = false
+        return hitTestManager.isInZone(sender.draggingLocation)
     }
 }
 
@@ -85,7 +229,7 @@ class FloatingWindowManager: ObservableObject {
         // Interaction settings
         panel.isMovableByWindowBackground = false
         panel.acceptsMouseMovedEvents = true
-        panel.ignoresMouseEvents = false
+        // Note: Mouse event handling is done via custom HitTestContentView
 
         // Hide window controls
         panel.titleVisibility = .hidden
@@ -103,11 +247,16 @@ class FloatingWindowManager: ObservableObject {
         let notchView = NotchView()
             .modelContainer(modelContainer)
 
-        // Set SwiftUI content
+        // Set SwiftUI content with custom hit testing
         let hostingView = NSHostingView(rootView: notchView)
         hostingView.wantsLayer = true
         hostingView.layer?.masksToBounds = false
-        panel.contentView = hostingView
+
+        // Setup custom content view with hit testing
+        panel.setupCustomContentView(hostingView: hostingView)
+
+        // Setup drag and drop destination
+        panel.setupDraggingDestination()
 
         self.panel = panel
 
@@ -194,9 +343,9 @@ class FloatingWindowManager: ObservableObject {
     }
 
     // Update the frame of notchContainer for mouse event handling
-    func setNotchContainerFrame(_ frame: CGRect) {
+    func setNotchContainerFrame(_ frame: CGRect, notchState: NotchState) {
         guard let panel = panel as? KeyablePanel else { return }
-        panel.notchContainerFrame = frame
+        panel.setNotchContainerFrame(frame, notchState: notchState)
     }
 
     deinit {

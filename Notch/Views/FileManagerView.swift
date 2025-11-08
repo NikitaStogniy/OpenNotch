@@ -63,7 +63,7 @@ struct FileManagerView: View {
     private var fileListView: some View {
         ScrollView {
             LazyVStack(spacing: 2) {
-                ForEach(storedFiles.prefix(3)) { file in
+                ForEach(storedFiles) { file in
                     FileRowView(file: file, modelContext: modelContext)
                 }
             }

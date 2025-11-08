@@ -174,28 +174,30 @@ struct NotchView: View {
         }
         .frame(width: contentWidth, height: contentHeight)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: notchState)
-        .background(
+        .overlay(
             GeometryReader { geometry in
                 Color.clear
                     .preference(key: FramePreferenceKey.self, value: geometry.frame(in: .named("rootView")))
+                    .onAppear {
+                        print("📐 [NotchView] GeometryReader onAppear")
+                    }
             }
+            .id(notchState) // Force GeometryReader to re-evaluate when state changes
         )
         .onPreferenceChange(FramePreferenceKey.self) { localFrame in
-            // localFrame is already in window content coordinates (relative to rootView)
-            // We just need to convert Y from SwiftUI (origin top, Y down)
-            // to AppKit window coordinates (origin bottom, Y up)
+            // localFrame is in rootView coordinates (SwiftUI coordinates)
+            // NSHostingView uses flipped coordinates (same as SwiftUI), so we can use it directly
+            // No need to convert to AppKit coordinates for NSTrackingArea
 
-            let windowHeight: CGFloat = 1200
-            let appKitY = windowHeight - localFrame.maxY
+            print("📐 [NotchView] State: \(notchState), contentSize: \(contentWidth)x\(contentHeight)")
+            print("📐 [NotchView] SwiftUI localFrame: \(localFrame)")
 
-            let appKitFrame = CGRect(
-                x: localFrame.origin.x,
-                y: appKitY,
-                width: localFrame.width,
-                height: localFrame.height
-            )
-
-            FloatingWindowManager.shared.setNotchContainerFrame(appKitFrame)
+            FloatingWindowManager.shared.setNotchContainerFrame(localFrame, notchState: notchState)
+        }
+        .onChange(of: notchState) { _, newState in
+            print("📐 [NotchView] notchState changed to: \(newState)")
+            // Force tracking area update by triggering preference change
+            // This ensures tracking area updates even if GeometryReader doesn't fire
         }
         .onHover { hovering in
             hoverCollapseTask?.cancel()
