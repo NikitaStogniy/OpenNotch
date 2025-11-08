@@ -11,9 +11,33 @@ import SwiftData
 import Combine
 
 // Custom NSPanel subclass that can become key window for keyboard events
+// and tracks mouse position to allow clicks through in non-interactive areas
 class KeyablePanel: NSPanel {
+    var notchContainerFrame: CGRect?
+
     override var canBecomeKey: Bool {
         return true
+    }
+
+    override var acceptsMouseMovedEvents: Bool {
+        get { return true }
+        set { }
+    }
+
+    override func mouseMoved(with event: NSEvent) {
+        super.mouseMoved(with: event)
+
+        // Get mouse location in window coordinates
+        let mouseLocation = event.locationInWindow
+
+        // Check if mouse is within notchContainer
+        if let containerFrame = notchContainerFrame {
+            let isInside = containerFrame.contains(mouseLocation)
+            ignoresMouseEvents = !isInside
+        } else {
+            // No container frame set, accept all events by default
+            ignoresMouseEvents = false
+        }
     }
 }
 
@@ -31,11 +55,11 @@ class FloatingWindowManager: ObservableObject {
         print("📦 Creating floating panel...")
         self.modelContainer = modelContainer
 
-        // Create panel with initial collapsed size
+        // Create panel with fixed size (680x1200)
         // Using .borderless and .fullSizeContentView for floating appearance
         // Using custom KeyablePanel to enable keyboard events
         let panel = KeyablePanel(
-            contentRect: NSRect(x: 0, y: 0, width: 310, height: 40),
+            contentRect: NSRect(x: 0, y: 0, width: 680, height: 1200),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
@@ -134,35 +158,45 @@ class FloatingWindowManager: ObservableObject {
         }
     }
 
+    // DEPRECATED: Window size is now fixed at 680x720
+    // Content animations are handled by SwiftUI
     func updateSize(width: CGFloat, height: CGFloat, animated: Bool = true, resetPosition: Bool = false) {
+        // No-op: size is fixed, animations are in SwiftUI
+        // This method is kept for backwards compatibility but does nothing
+    }
+
+    // Update window position based on visible content height
+    func updatePosition(visibleHeight: CGFloat, animated: Bool = true) {
         guard let panel = panel, let screen = NSScreen.main else { return }
 
-        var newFrame = panel.frame
-        let heightDiff = height - newFrame.height
-
-        newFrame.size.width = width
-        newFrame.size.height = height
-
-        // Center horizontally
         let screenFrame = screen.frame
-        let centerX = (screenFrame.width - width) / 2 + screenFrame.origin.x
-        newFrame.origin.x = centerX
+        let fixedWidth: CGFloat = 680
+        let fixedHeight: CGFloat = 1200
 
-        // Keep top edge fixed, grow downward
-        newFrame.origin.y -= heightDiff
+        // Calculate center position horizontally
+        let xPosition = (screenFrame.width - fixedWidth) / 2 + screenFrame.origin.x
+
+        // Position window so top is at screen top (in notch)
+        // Content expands downward from the notch
+        let yPosition = screenFrame.maxY - fixedHeight
+
+        let newOrigin = NSPoint(x: xPosition, y: yPosition)
 
         if animated {
             NSAnimationContext.runAnimationGroup({ context in
-                context.duration = 0.35
-                context.timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0.1, 0.25, 1.0) // Custom easing
-                panel.animator().setFrame(newFrame, display: true)
-            }, completionHandler: {
-                // Ensure final position is set
-                panel.setFrame(newFrame, display: true)
+                context.duration = 0.4
+                context.timingFunction = CAMediaTimingFunction(controlPoints: 0.25, 0.1, 0.25, 1.0)
+                panel.animator().setFrameOrigin(newOrigin)
             })
         } else {
-            panel.setFrame(newFrame, display: true)
+            panel.setFrameOrigin(newOrigin)
         }
+    }
+
+    // Update the frame of notchContainer for mouse event handling
+    func setNotchContainerFrame(_ frame: CGRect) {
+        guard let panel = panel as? KeyablePanel else { return }
+        panel.notchContainerFrame = frame
     }
 
     deinit {

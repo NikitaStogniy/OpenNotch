@@ -17,10 +17,11 @@ enum NotchState {
 struct NotchView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var storedFiles: [StoredFile]
+    @StateObject private var settings = SettingsManager.shared
 
     @State private var notchState: NotchState = .collapsed {
         didSet {
-            updateWindowSize()
+            updateWindowPosition()
         }
     }
     @State private var isHovering = false
@@ -34,11 +35,23 @@ struct NotchView: View {
     @State private var lastEscapeTime: Date? = nil
 
     var body: some View {
-        notchContainer
-            .background(.clear)
-            .focusable()
-            .focused($isFocused)
-            .onKeyPress { keyPress in
+        VStack(spacing: 0) {
+            // Visible content area - centered horizontally at TOP
+            HStack {
+                Spacer()
+                notchContainer
+                Spacer()
+            }
+
+            // Dynamic spacer - pushes content to top and fills remaining space
+            Spacer()
+                .frame(height: 1200 - contentHeight)
+        }
+        .coordinateSpace(name: "rootView")
+        .background(.clear)
+        .focusable()
+        .focused($isFocused)
+        .onKeyPress { keyPress in
                 // Only handle keys when expanded
                 guard notchState == .expanded else { return .ignored }
 
@@ -92,35 +105,6 @@ struct NotchView: View {
 
                 return .ignored
             }
-            .onHover { hovering in
-                hoverCollapseTask?.cancel()
-
-                if hovering {
-                    isHovering = true
-                    notchState = .expanded
-                    // Auto-focus when hovering
-                    isFocused = true
-                } else {
-                    hoverCollapseTask = Task {
-                        try? await Task.sleep(nanoseconds: 250_000_000)
-                        guard !Task.isCancelled else { return }
-
-                        isHovering = false
-                        if !isDraggingFile {
-                            notchState = .collapsed
-                            showCalculator = false  // Reset calculator state on collapse
-                            lastEscapeTime = nil  // Reset escape timer
-                        }
-                    }
-                }
-            }
-            .onDrop(of: [.fileURL], delegate: FileDropExpandDelegate(
-                modelContext: modelContext,
-                isTargeted: $isDropTargeted,
-                isDraggingFile: $isDraggingFile,
-                notchState: $notchState,
-                isDraggingFromNotch: $isDraggingFromNotch
-            ))
             .onReceive(NotificationCenter.default.publisher(for: .draggingFromNotch)) { _ in
                 isDraggingFromNotch = true
             }
@@ -129,32 +113,44 @@ struct NotchView: View {
             }
     }
 
-    private func updateWindowSize() {
-        let size = notchState.windowSize
-        FloatingWindowManager.shared.updateSize(width: size.width, height: size.height, animated: true, resetPosition: true)
+    // Content size based on state
+    private var contentWidth: CGFloat {
+        notchState == .collapsed ? settings.collapsedWidth : settings.expandedWidth
+    }
+
+    private var contentHeight: CGFloat {
+        notchState == .collapsed ? settings.collapsedHeight : settings.expandedHeight
+    }
+
+    // Update window position based on content height
+    private func updateWindowPosition() {
+        FloatingWindowManager.shared.updatePosition(visibleHeight: contentHeight, animated: true)
     }
 
     @ViewBuilder
     private var notchContainer: some View {
         ZStack {
-            // Black background
+            // Background with settings-based colors
             UnevenRoundedRectangle(
                 topLeadingRadius: 0,
-                bottomLeadingRadius: notchState == .collapsed ? 18 : 24,
-                bottomTrailingRadius: notchState == .collapsed ? 18 : 24,
+                bottomLeadingRadius: notchState == .collapsed ? settings.cornerRadius : settings.cornerRadius + 6,
+                bottomTrailingRadius: notchState == .collapsed ? settings.cornerRadius : settings.cornerRadius + 6,
                 topTrailingRadius: 0
             )
-                .fill(Color.black)
+                .fill(settings.getBackgroundColor().opacity(settings.notchOpacity))
                 .overlay {
                     UnevenRoundedRectangle(
                         topLeadingRadius: 0,
-                        bottomLeadingRadius: notchState == .collapsed ? 18 : 24,
-                        bottomTrailingRadius: notchState == .collapsed ? 18 : 24,
+                        bottomLeadingRadius: notchState == .collapsed ? settings.cornerRadius : settings.cornerRadius + 6,
+                        bottomTrailingRadius: notchState == .collapsed ? settings.cornerRadius : settings.cornerRadius + 6,
                         topTrailingRadius: 0
                     )
                         .stroke(
                             LinearGradient(
-                                colors: [.white.opacity(0.2), .white.opacity(0.05)],
+                                colors: [
+                                    .white.opacity(settings.notchBorderOpacity * 1.5),
+                                    .white.opacity(settings.notchBorderOpacity * 0.5)
+                                ],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
@@ -173,41 +169,97 @@ struct NotchView: View {
                         .transition(.opacity)
                 }
             }
-            .animation(.easeOut(duration: 0.25), value: notchState)
+            .animation(.easeOut(duration: settings.animationDuration), value: notchState)
             .padding()
         }
-        .frame(
-            width: notchState == .collapsed ? 310 : 680,
-            height: notchState == .collapsed ? 40 : 360
+        .frame(width: contentWidth, height: contentHeight)
+        .animation(.spring(response: 0.4, dampingFraction: 0.8), value: notchState)
+        .background(
+            GeometryReader { geometry in
+                Color.clear
+                    .preference(key: FramePreferenceKey.self, value: geometry.frame(in: .named("rootView")))
+            }
         )
+        .onPreferenceChange(FramePreferenceKey.self) { localFrame in
+            // localFrame is already in window content coordinates (relative to rootView)
+            // We just need to convert Y from SwiftUI (origin top, Y down)
+            // to AppKit window coordinates (origin bottom, Y up)
+
+            let windowHeight: CGFloat = 1200
+            let appKitY = windowHeight - localFrame.maxY
+
+            let appKitFrame = CGRect(
+                x: localFrame.origin.x,
+                y: appKitY,
+                width: localFrame.width,
+                height: localFrame.height
+            )
+
+            FloatingWindowManager.shared.setNotchContainerFrame(appKitFrame)
+        }
+        .onHover { hovering in
+            hoverCollapseTask?.cancel()
+
+            if hovering {
+                isHovering = true
+                notchState = .expanded
+                // Auto-focus when hovering
+                isFocused = true
+            } else {
+                hoverCollapseTask = Task {
+                    let delay = UInt64(settings.collapseDelay * 1_000_000_000)
+                    try? await Task.sleep(nanoseconds: delay)
+                    guard !Task.isCancelled else { return }
+
+                    isHovering = false
+                    if !isDraggingFile {
+                        notchState = .collapsed
+                        showCalculator = false  // Reset calculator state on collapse
+                        lastEscapeTime = nil  // Reset escape timer
+                    }
+                }
+            }
+        }
+        .onDrop(of: [.fileURL], delegate: FileDropExpandDelegate(
+            modelContext: modelContext,
+            isTargeted: $isDropTargeted,
+            isDraggingFile: $isDraggingFile,
+            notchState: $notchState,
+            isDraggingFromNotch: $isDraggingFromNotch
+        ))
     }
 
     // MARK: - Collapsed State
     private var collapsedContent: some View {
         HStack(spacing: 12) {
-            // Calculator button on left
-            Button(action: {
-                showCalculator = true
-                notchState = .expanded
-            }) {
-                Image(systemName: "function")
-                    .font(.system(size: 12))
-                    .foregroundColor(.white.opacity(0.8))
-                    .frame(width: 24, height: 24)
+            // Calculator button on left - only show if enabled
+            if settings.calculatorEnabled {
+                Button(action: {
+                    showCalculator = true
+                    notchState = .expanded
+                }) {
+                    Image(systemName: "function")
+                        .font(.system(size: 12))
+                        .foregroundColor(settings.getAccentColor().opacity(0.8))
+                        .frame(width: 24, height: 24)
+                }
+                .buttonStyle(.plain)
+                .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
-            .contentShape(Rectangle())
 
             Spacer()
 
-            // File count indicator on right
-            HStack(spacing: 4) {
-                Image(systemName: "doc.fill")
-                    .font(.system(size: 12))
-                Text("\(storedFiles.count)")
-                    .font(.system(size: 12, weight: .semibold))
+            // File count indicator on right - only show if file manager enabled
+            if settings.fileManagerEnabled {
+                HStack(spacing: 4) {
+                    Image(systemName: "doc.fill")
+                        .font(.system(size: 12))
+                    Text("\(storedFiles.count)")
+                        .font(.system(size: 12, weight: .semibold))
+                }
+                .foregroundColor(settings.getAccentColor())
+                .opacity(0.8)
             }
-            .opacity(0.8)
         }
         .foregroundColor(.white)
     }
@@ -215,41 +267,70 @@ struct NotchView: View {
     // MARK: - Expanded State
     private var expandedContent: some View {
         VStack(spacing: 0) {
-            // Top bar with switch button
-            HStack {
-                Button(action: {
-                    showCalculator.toggle()
-                }) {
-                    HStack(spacing: 4) {
-                        Image(systemName: showCalculator ? "arrow.left" : "function")
-                            .font(.system(size: 10))
-                        Text(showCalculator ? "Back to files" : "Calculator")
-                            .font(.system(size: 11))
+            // Top bar with switch button - only show if both modules enabled
+            if settings.calculatorEnabled && settings.fileManagerEnabled {
+                HStack {
+                    Button(action: {
+                        showCalculator.toggle()
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: showCalculator ? "arrow.left" : "function")
+                                .font(.system(size: 10))
+                            Text(showCalculator ? "Back to files" : "Calculator")
+                                .font(.system(size: 11))
+                        }
+                        .foregroundColor(.white.opacity(0.7))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(settings.getAccentColor().opacity(0.2))
+                        )
                     }
-                    .foregroundColor(.white.opacity(0.7))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(Color.white.opacity(0.1))
-                    )
+                    .buttonStyle(.plain)
+                    Spacer()
                 }
-                .buttonStyle(.plain)
-                Spacer()
+                .padding(.bottom, 8)
+                .frame(height: 28)
             }
-            .padding(.bottom, 8)
-            .frame(height: 28)
 
             // Content
             Group {
-                if showCalculator {
+                if settings.calculatorEnabled && showCalculator {
+                    CalculatorView(keyPressed: $calculatorKeyPressed)
+                } else if settings.fileManagerEnabled {
+                    FileManagerView(isDropTargeted: $isDropTargeted)
+                } else if settings.calculatorEnabled {
                     CalculatorView(keyPressed: $calculatorKeyPressed)
                 } else {
-                    FileManagerView(isDropTargeted: $isDropTargeted)
+                    // No modules enabled
+                    VStack {
+                        Spacer()
+                        VStack(spacing: 12) {
+                            Image(systemName: "exclamationmark.triangle")
+                                .font(.system(size: 48))
+                                .foregroundColor(.secondary)
+                            Text("No modules enabled")
+                                .font(.headline)
+                                .foregroundColor(.secondary)
+                            Text("Enable modules in Settings")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                    }
                 }
             }
-            .animation(.easeInOut(duration: 0.2), value: showCalculator)
+            .animation(.easeInOut(duration: settings.animationDuration), value: showCalculator)
         }
+    }
+}
+
+// MARK: - Preference Key for Frame Tracking
+struct FramePreferenceKey: PreferenceKey {
+    static var defaultValue: CGRect = .zero
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
+        value = nextValue()
     }
 }
 

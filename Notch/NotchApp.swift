@@ -37,6 +37,11 @@ struct NotchApp: App {
                 .modelContainer(sharedModelContainer)
         }
         .menuBarExtraStyle(.menu)
+
+        // Settings Window
+        Settings {
+            SettingsView()
+        }
     }
 }
 

@@ -9,6 +9,7 @@ import AppKit
 
 class NotchPositioner {
     /// Position window at the notch area (top center of screen)
+    /// Window is fixed at 680x1200, content at top expands downward
     static func positionAtNotch(window: NSWindow) {
         guard let screen = NSScreen.main else {
             print("❌ No main screen found!")
@@ -16,22 +17,30 @@ class NotchPositioner {
         }
 
         let screenFrame = screen.frame
+
+        // Fixed window size
+        let fixedWidth: CGFloat = 680
+        let fixedHeight: CGFloat = 1200
+
+        // Set fixed size first
+        window.setContentSize(NSSize(width: fixedWidth, height: fixedHeight))
         let windowFrame = window.frame
 
         print("📐 Screen frame: \(screenFrame)")
-        print("📐 Window frame: \(windowFrame)")
+        print("📐 Window frame (fixed): \(windowFrame)")
 
         // Calculate center position horizontally
-        let xPosition = (screenFrame.width - windowFrame.width) / 2 + screenFrame.origin.x
+        let xPosition = (screenFrame.width - fixedWidth) / 2 + screenFrame.origin.x
 
-        // Position at the very top of screen (in notch area)
+        // Position window so top is at screen top (in notch area)
+        // Content expands downward from the notch
+        let yPosition = screenFrame.maxY - fixedHeight
+
         let notchInfo = getNotchInfo()
-        let yPosition = screenFrame.maxY - windowFrame.height
-
         if notchInfo.hasNotch {
             print("📍 Positioning in notch area (notch height: \(notchInfo.height)pt) at y=\(yPosition)")
         } else {
-            print("📍 Positioning at top of screen (no notch) at y=\(yPosition)")
+            print("📍 Positioning at top of screen at y=\(yPosition)")
         }
 
         let origin = NSPoint(x: xPosition, y: yPosition)
@@ -54,31 +63,6 @@ class NotchPositioner {
         return (false, 0)
     }
 
-    /// Calculate ideal window width based on screen size
-    static func calculateIdealWidth(for state: NotchState) -> CGFloat {
-        guard let screen = NSScreen.main else {
-            return state == .collapsed ? 300 : 680
-        }
-
-        let screenWidth = screen.frame.width
-
-        switch state {
-        case .collapsed:
-            return min(300, screenWidth * 0.2)
-        case .expanded:
-            return min(680, screenWidth * 0.5)
-        }
-    }
-}
-
-// MARK: - Notch State Extension
-extension NotchState {
-    var windowSize: NSSize {
-        switch self {
-        case .collapsed:
-            return NSSize(width: 310, height: 40)  // Extended width for side buttons
-        case .expanded:
-            return NSSize(width: 680, height: 360)
-        }
-    }
+    /// Fixed window size (always the same)
+    static let fixedWindowSize = NSSize(width: 680, height: 1200)
 }

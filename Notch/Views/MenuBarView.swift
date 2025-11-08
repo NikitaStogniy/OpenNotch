@@ -10,6 +10,7 @@ import SwiftData
 
 struct MenuBarView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.openSettings) private var openSettings
     @Query private var storedFiles: [StoredFile]
     @StateObject private var windowManager = FloatingWindowManager.shared
 
@@ -110,12 +111,7 @@ struct MenuBarView: View {
 
     // MARK: - Actions
     private func showSettings() {
-        let alert = NSAlert()
-        alert.messageText = "Settings"
-        alert.informativeText = "Notch Settings\n\nVersion: 1.0\n\nConfigure your notch appearance, behavior, and shortcuts."
-        alert.alertStyle = .informational
-        alert.addButton(withTitle: "OK")
-        alert.runModal()
+        openSettings()
     }
 
     private func showAbout() {
