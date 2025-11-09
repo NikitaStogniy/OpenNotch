@@ -51,6 +51,7 @@ struct NotchView: View {
         .background(.clear)
         .focusable()
         .focused($isFocused)
+        .focusEffectDisabled()
         .onKeyPress { keyPress in
                 // Only handle keys when expanded
                 guard notchState == .expanded else { return .ignored }
@@ -178,26 +179,11 @@ struct NotchView: View {
             GeometryReader { geometry in
                 Color.clear
                     .preference(key: FramePreferenceKey.self, value: geometry.frame(in: .named("rootView")))
-                    .onAppear {
-                        print("📐 [NotchView] GeometryReader onAppear")
-                    }
             }
             .id(notchState) // Force GeometryReader to re-evaluate when state changes
         )
         .onPreferenceChange(FramePreferenceKey.self) { localFrame in
-            // localFrame is in rootView coordinates (SwiftUI coordinates)
-            // NSHostingView uses flipped coordinates (same as SwiftUI), so we can use it directly
-            // No need to convert to AppKit coordinates for NSTrackingArea
-
-            print("📐 [NotchView] State: \(notchState), contentSize: \(contentWidth)x\(contentHeight)")
-            print("📐 [NotchView] SwiftUI localFrame: \(localFrame)")
-
             FloatingWindowManager.shared.setNotchContainerFrame(localFrame, notchState: notchState)
-        }
-        .onChange(of: notchState) { _, newState in
-            print("📐 [NotchView] notchState changed to: \(newState)")
-            // Force tracking area update by triggering preference change
-            // This ensures tracking area updates even if GeometryReader doesn't fire
         }
         .onHover { hovering in
             hoverCollapseTask?.cancel()

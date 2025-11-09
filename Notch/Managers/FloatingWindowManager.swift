@@ -55,50 +55,32 @@ class HitTestContentView: NSView {
     weak var hitTestManager: HitTestManager?
 
     override func hitTest(_ point: NSPoint) -> NSView? {
-        print("🎯 [HitTestContentView] hitTest called with point: \(point)")
-        print("🎯 [HitTestContentView] bounds: \(bounds)")
-        print("🎯 [HitTestContentView] subviews count: \(subviews.count)")
-
         // If no hit test manager or no frame set yet, pass through to avoid blocking
         guard let manager = hitTestManager,
               manager.collapsedZoneFrame != nil else {
-            print("🎯 [HitTestContentView] No manager or frame - passing through")
             return nil
         }
 
         // Check if point is in active zone
-        let inZone = manager.isInZone(point)
-        print("🎯 [HitTestContentView] Point in zone: \(inZone)")
-
-        if !inZone {
+        if !manager.isInZone(point) {
             // Point outside active zone - pass through
-            print("🎯 [HitTestContentView] Point outside zone - passing through")
             return nil
         }
 
         // Point inside active zone - manually check subviews
         // This is necessary because super.hitTest(point) doesn't properly
         // forward events to NSHostingView for SwiftUI interactions
-        for (index, subview) in subviews.reversed().enumerated() {
-            print("🎯 [HitTestContentView] Checking subview \(index): \(type(of: subview))")
-            print("🎯 [HitTestContentView] Subview frame: \(subview.frame)")
-
+        for subview in subviews.reversed() {
             // Convert point to subview's coordinate system
             let convertedPoint = convert(point, to: subview)
-            print("🎯 [HitTestContentView] Converted point: \(convertedPoint)")
-            print("🎯 [HitTestContentView] Subview bounds: \(subview.bounds)")
 
             // Let the subview handle hit testing (crucial for NSHostingView/SwiftUI)
             if let hitView = subview.hitTest(convertedPoint) {
-                print("🎯 [HitTestContentView] ✅ Found hit view: \(type(of: hitView))")
                 return hitView
-            } else {
-                print("🎯 [HitTestContentView] ❌ No hit in subview")
             }
         }
 
         // Point is in zone but not in any subview - return self
-        print("🎯 [HitTestContentView] Returning self")
         return self
     }
 }
@@ -121,23 +103,15 @@ class KeyablePanel: NSPanel, NSDraggingDestination {
     private func updateTrackingArea() {
         guard let contentView = self.contentView else { return }
 
-        print("🎯 [KeyablePanel] updateTrackingArea called")
-        print("🎯 [KeyablePanel] contentView bounds: \(contentView.bounds)")
-
         // Remove old tracking area
         if let existingArea = trackingArea {
             contentView.removeTrackingArea(existingArea)
-            print("🎯 [KeyablePanel] Removed old tracking area: \(existingArea.rect)")
         }
 
         // Get current frame based on notch state (collapsed = exact, expanded = with expansion)
         guard let trackingFrame = hitTestManager.getCurrentFrame() else {
-            print("🎯 [KeyablePanel] No tracking frame available")
             return
         }
-
-        print("🎯 [KeyablePanel] HitTestManager current state: \(hitTestManager.currentState)")
-        print("🎯 [KeyablePanel] Creating tracking area with rect: \(trackingFrame)")
 
         // Create new tracking area with state-appropriate frame
         let newTrackingArea = NSTrackingArea(
@@ -149,7 +123,6 @@ class KeyablePanel: NSPanel, NSDraggingDestination {
 
         contentView.addTrackingArea(newTrackingArea)
         trackingArea = newTrackingArea
-        print("🎯 [KeyablePanel] Tracking area created and added")
     }
 
     override var canBecomeKey: Bool {
@@ -388,11 +361,6 @@ class FloatingWindowManager: ObservableObject {
             width: frame.width,
             height: frame.height
         )
-
-        print("📐 [FloatingWindowManager] Converting frame:")
-        print("  SwiftUI frame: \(frame)")
-        print("  AppKit frame: \(convertedFrame)")
-        print("  Content height: \(contentHeight)")
 
         panel.setNotchContainerFrame(convertedFrame, notchState: notchState)
     }
