@@ -289,10 +289,55 @@ struct AppearanceSettingsView: View {
 // MARK: - Modules Settings
 struct ModulesSettingsView: View {
     @StateObject private var settings = SettingsManager.shared
+    @StateObject private var moduleManager = ModuleManager.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            SettingsSection(title: "Available Modules", icon: "square.grid.2x2.fill") {
+            // Preview Section
+            HStack {
+                Spacer()
+                NotchPreviewView()
+                Spacer()
+            }
+
+            // New Module System
+            SettingsSection(title: "New Modules", icon: "sparkles") {
+                VStack(alignment: .leading, spacing: 16) {
+                    if moduleManager.availableModules.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "info.circle.fill")
+                                    .font(.title2)
+                                    .foregroundColor(.accentColor)
+
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("No new modules yet")
+                                        .font(.headline)
+                                    Text("New modules will appear here")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+
+                                Spacer()
+                            }
+                            .padding()
+                            .background(Color.accentColor.opacity(0.1))
+                            .cornerRadius(8)
+                        }
+                    } else {
+                        ForEach(Array(moduleManager.availableModules.enumerated()), id: \.element.id) { index, module in
+                            DynamicModuleToggle(module: module)
+
+                            if index < moduleManager.availableModules.count - 1 {
+                                Divider()
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Legacy Modules
+            SettingsSection(title: "Legacy Modules", icon: "square.grid.2x2.fill") {
                 VStack(alignment: .leading, spacing: 16) {
                     // Calculator Module
                     ModuleToggle(
@@ -311,37 +356,55 @@ struct ModulesSettingsView: View {
                         icon: "folder.fill",
                         isEnabled: $settings.fileManagerEnabled
                     )
-
-                    Divider()
-
-                    // Placeholder for future modules
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(.secondary)
-
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text("More modules coming soon")
-                                    .font(.headline)
-                                    .foregroundColor(.secondary)
-                                Text("Additional modules will be added in future updates")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-
-                            Spacer()
-                        }
-                        .padding()
-                        .background(Color.secondary.opacity(0.1))
-                        .cornerRadius(8)
-                    }
                 }
             }
 
             Spacer()
         }
         .padding(24)
+    }
+}
+
+// MARK: - Dynamic Module Toggle
+struct DynamicModuleToggle: View {
+    let module: any NotchModule
+    @StateObject private var moduleManager = ModuleManager.shared
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: module.icon)
+                .font(.title2)
+                .foregroundColor(module.isEnabled ? .accentColor : .secondary)
+                .frame(width: 32, height: 32)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(module.name)
+                    .font(.headline)
+                Text(getModuleDescription())
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: Binding(
+                get: { module.isEnabled },
+                set: { _ in
+                    moduleManager.toggleModule(id: module.id)
+                }
+            ))
+            .toggleStyle(.switch)
+        }
+    }
+
+    private func getModuleDescription() -> String {
+        // Return specific descriptions for known modules
+        switch module.id {
+        case "calendar":
+            return "View your calendar events and appointments"
+        default:
+            return "Custom module"
+        }
     }
 }
 
