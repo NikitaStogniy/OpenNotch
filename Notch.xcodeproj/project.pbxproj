@@ -263,6 +263,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Open Notch";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Notch needs permission to control media playback in Music, Spotify, and other apps.";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Notch needs full calendar access to show your upcoming events and help you stay organized.";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Notch needs access to your calendar to display upcoming events and appointments in the notch area.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Notch needs access to the camera to display your camera feed in the notch area.";
@@ -303,6 +304,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Open Notch";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Notch needs permission to control media playback in Music, Spotify, and other apps.";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Notch needs full calendar access to show your upcoming events and help you stay organized.";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Notch needs access to your calendar to display upcoming events and appointments in the notch area.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Notch needs access to the camera to display your camera feed in the notch area.";
