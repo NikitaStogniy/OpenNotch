@@ -14,6 +14,9 @@ class SettingsManager: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Appearance Settings
+    @AppStorage("isAdvancedMode") var isAdvancedMode: Bool = false {
+        willSet { objectWillChange.send() }
+    }
     @AppStorage("notchBackgroundColor") var notchBackgroundColor: String = "black" {
         willSet { objectWillChange.send() }
     }
@@ -67,6 +70,7 @@ class SettingsManager: ObservableObject {
 
     // MARK: - Helper Methods
     func resetToDefaults() {
+        isAdvancedMode = false
         notchBackgroundColor = "black"
         notchOpacity = 1.0
         notchBorderOpacity = 0.2
