@@ -678,6 +678,8 @@ struct DynamicModuleToggle: View {
         switch module.id {
         case "calendar":
             return "View your calendar events and appointments"
+        case "todolist":
+            return "Manage your daily tasks with automatic cleanup of completed items"
         default:
             return "Custom module"
         }

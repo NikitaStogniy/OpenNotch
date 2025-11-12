@@ -16,6 +16,7 @@ struct NotchApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             StoredFile.self,
+            TodoItem.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

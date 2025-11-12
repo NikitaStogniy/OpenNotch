@@ -24,6 +24,7 @@ class ModuleManager: ObservableObject {
         // Register built-in modules
         availableModules = [
             CalendarModule(),
+            TodoListModule(),
             // Future modules can be added here
         ]
     }
