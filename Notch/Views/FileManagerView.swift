@@ -22,14 +22,13 @@ struct FileManagerView: View {
     @State private var isDraggingFromNotch = false
 
     var body: some View {
-        VStack(spacing: 2) {
+        ModuleExpandedLayout(icon: "folder", title: "Files") {
             if storedFiles.isEmpty {
                 dropZoneView
             } else {
                 fileListView
             }
         }
-        .padding(2)
         .onReceive(NotificationCenter.default.publisher(for: .draggingFromNotch)) { _ in
             isDraggingFromNotch = true
         }
@@ -68,7 +67,6 @@ struct FileManagerView: View {
                 }
             }
         }
-        .frame(maxHeight: .infinity)
         .onDrop(of: [.fileURL], delegate: FileDropDelegate(modelContext: modelContext, isTargeted: $isDropTargeted, isDraggingFromNotch: isDraggingFromNotch))
     }
 }

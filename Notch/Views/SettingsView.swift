@@ -15,7 +15,6 @@ struct SettingsView: View {
     enum SettingsTab: String, CaseIterable, Identifiable {
         case appearance = "Appearance"
         case modules = "Modules"
-        case behavior = "Behavior"
 
         var id: String { rawValue }
 
@@ -23,7 +22,6 @@ struct SettingsView: View {
             switch self {
             case .appearance: return "paintbrush.fill"
             case .modules: return "square.grid.2x2.fill"
-            case .behavior: return "gearshape.fill"
             }
         }
     }
@@ -46,8 +44,6 @@ struct SettingsView: View {
                         AppearanceSettingsView()
                     case .modules:
                         ModulesSettingsView()
-                    case .behavior:
-                        BehaviorSettingsView()
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -75,7 +71,7 @@ struct AppearanceSettingsView: View {
                 Text("Appearance")
                     .font(.title2)
                     .fontWeight(.bold)
-                Text("Customize the visual appearance of your notch")
+                Text("Customize the visual appearance and behavior of your notch")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
@@ -396,7 +392,7 @@ struct AppearanceSettingsView: View {
                             title: "Collapsed Height",
                             value: $settings.collapsedHeight,
                             unit: "pt",
-                            min: 30,
+                            min: 20,
                             max: 100,
                             step: 5
                         )
@@ -418,6 +414,22 @@ struct AppearanceSettingsView: View {
                             max: 1000,
                             step: 10
                         )
+
+                        Divider()
+
+                        Text("Spacing")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .fontWeight(.semibold)
+
+                        NumberInputField(
+                            title: "Collapsed Padding",
+                            value: $settings.collapsedPadding,
+                            unit: "pt",
+                            min: 4,
+                            max: 24,
+                            step: 2
+                        )
                     } else {
                         // Simple Mode: Only corner radius with larger steps
                         VStack(alignment: .leading, spacing: 8) {
@@ -434,6 +446,58 @@ struct AppearanceSettingsView: View {
 
                             Slider(value: $settings.cornerRadius, in: 8...32, step: 5)
                         }
+                    }
+                }
+            }
+
+            SettingsSection(
+                title: "Interaction",
+                icon: "hand.tap.fill",
+                description: "Control how the notch responds to mouse hover and clicks"
+            ) {
+                VStack(alignment: .leading, spacing: 16) {
+                    Toggle("Auto-expand on hover", isOn: $settings.autoExpandOnHover)
+                        .toggleStyle(.switch)
+
+                    if settings.autoExpandOnHover {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text("Collapse Delay")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                Text("\(settings.collapseDelay, specifier: "%.2f")s")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .monospacedDigit()
+                            }
+
+                            Slider(value: $settings.collapseDelay, in: 0.1...2.0, step: 0.05)
+                        }
+                        .padding(.leading, 20)
+                    }
+                }
+            }
+
+            SettingsSection(
+                title: "Animations",
+                icon: "wand.and.stars",
+                description: "Adjust animation speed and smoothness"
+            ) {
+                VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text("Animation Duration")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Text("\(settings.animationDuration, specifier: "%.2f")s")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .monospacedDigit()
+                        }
+
+                        Slider(value: $settings.animationDuration, in: 0.1...0.8, step: 0.05)
                     }
                 }
             }
@@ -561,20 +625,43 @@ struct ModulesSettingsView: View {
             }
             .padding(.bottom, 8)
 
-            // Preview Section
+            // Preview Section with drag & drop
             HStack {
                 Spacer()
                 NotchPreviewView()
                 Spacer()
             }
 
-            // New Module System
+            // Module System
             SettingsSection(
-                title: "New Modules",
+                title: "Available Modules",
                 icon: "sparkles",
-                description: "Modern modular widgets with enhanced functionality"
+                description: "Modular widgets with enhanced functionality"
             ) {
                 VStack(alignment: .leading, spacing: 16) {
+                    // Drag & Drop hint
+                    HStack(spacing: 12) {
+                        Image(systemName: "hand.point.up.left.and.text")
+                            .font(.title3)
+                            .foregroundColor(.blue)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Drag to arrange")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Text("Use the notch preview above to enable, disable, and arrange modules")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+
+                        Spacer()
+                    }
+                    .padding(12)
+                    .background(Color.blue.opacity(0.1))
+                    .cornerRadius(8)
+
+                    Divider()
+
                     if moduleManager.availableModules.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack(spacing: 12) {
@@ -583,9 +670,9 @@ struct ModulesSettingsView: View {
                                     .foregroundColor(.accentColor)
 
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("No new modules yet")
+                                    Text("No modules available")
                                         .font(.headline)
-                                    Text("New modules will appear here")
+                                    Text("Modules will appear here when available")
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
@@ -608,40 +695,13 @@ struct ModulesSettingsView: View {
                 }
             }
 
-            // Legacy Modules
-            SettingsSection(
-                title: "Legacy Modules",
-                icon: "square.grid.2x2.fill",
-                description: "Classic modules from earlier versions"
-            ) {
-                VStack(alignment: .leading, spacing: 16) {
-                    // Calculator Module
-                    ModuleToggle(
-                        title: "Calculator",
-                        description: "Quick calculator accessible via keyboard shortcuts",
-                        icon: "function",
-                        isEnabled: $settings.calculatorEnabled
-                    )
-
-                    Divider()
-
-                    // File Manager Module
-                    ModuleToggle(
-                        title: "File Manager",
-                        description: "Drag and drop files for quick access",
-                        icon: "folder.fill",
-                        isEnabled: $settings.fileManagerEnabled
-                    )
-                }
-            }
-
             Spacer()
         }
         .padding(24)
     }
 }
 
-// MARK: - Dynamic Module Toggle
+// MARK: - Dynamic Module Display
 struct DynamicModuleToggle: View {
     let module: any NotchModule
     @StateObject private var moduleManager = ModuleManager.shared
@@ -654,22 +714,28 @@ struct DynamicModuleToggle: View {
                 .frame(width: 32, height: 32)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(module.name)
-                    .font(.headline)
+                HStack(spacing: 6) {
+                    Text(module.name)
+                        .font(.headline)
+
+                    // Status badge
+                    Text(module.isEnabled ? "Enabled" : "Disabled")
+                        .font(.caption2)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(
+                            Capsule()
+                                .fill(module.isEnabled ? Color.accentColor.opacity(0.2) : Color.secondary.opacity(0.2))
+                        )
+                        .foregroundColor(module.isEnabled ? .accentColor : .secondary)
+                }
+
                 Text(getModuleDescription())
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
 
             Spacer()
-
-            Toggle("", isOn: Binding(
-                get: { module.isEnabled },
-                set: { _ in
-                    moduleManager.toggleModule(id: module.id)
-                }
-            ))
-            .toggleStyle(.switch)
         }
     }
 
@@ -680,84 +746,15 @@ struct DynamicModuleToggle: View {
             return "View your calendar events and appointments"
         case "todolist":
             return "Manage your daily tasks with automatic cleanup of completed items"
+        case "mediacontroller":
+            return "Control your music playback"
+        case "calculator":
+            return "Quick calculator accessible via keyboard shortcuts"
+        case "fileManager":
+            return "Drag and drop files for quick access"
         default:
             return "Custom module"
         }
-    }
-}
-
-// MARK: - Behavior Settings
-struct BehaviorSettingsView: View {
-    @StateObject private var settings = SettingsManager.shared
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            // Tab Description
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Behavior")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                Text("Configure how your notch responds to interactions and animations")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            .padding(.bottom, 8)
-
-            SettingsSection(
-                title: "Interaction",
-                icon: "hand.tap.fill",
-                description: "Control how the notch responds to mouse hover and clicks"
-            ) {
-                VStack(alignment: .leading, spacing: 16) {
-                    Toggle("Auto-expand on hover", isOn: $settings.autoExpandOnHover)
-                        .toggleStyle(.switch)
-
-                    if settings.autoExpandOnHover {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                Text("Collapse Delay")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                Text("\(settings.collapseDelay, specifier: "%.2f")s")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                    .monospacedDigit()
-                            }
-
-                            Slider(value: $settings.collapseDelay, in: 0.1...2.0, step: 0.05)
-                        }
-                        .padding(.leading, 20)
-                    }
-                }
-            }
-
-            SettingsSection(
-                title: "Animations",
-                icon: "wand.and.stars",
-                description: "Adjust animation speed and smoothness"
-            ) {
-                VStack(alignment: .leading, spacing: 16) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("Animation Duration")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text("\(settings.animationDuration, specifier: "%.2f")s")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                                .monospacedDigit()
-                        }
-
-                        Slider(value: $settings.animationDuration, in: 0.1...0.8, step: 0.05)
-                    }
-                }
-            }
-
-            Spacer()
-        }
-        .padding(24)
     }
 }
 
@@ -879,6 +876,16 @@ struct NumberInputField: View {
                         validateAndUpdate(textValue)
                         isFocused = false
                     }
+                    .onKeyPress { keyPress in
+                        if keyPress.key == .upArrow {
+                            incrementValue()
+                            return .handled
+                        } else if keyPress.key == .downArrow {
+                            decrementValue()
+                            return .handled
+                        }
+                        return .ignored
+                    }
 
                 Text(unit)
                     .font(.subheadline)
@@ -912,6 +919,18 @@ struct NumberInputField: View {
                 textValue = String(format: "%.0f", min)
             }
         }
+    }
+
+    private func incrementValue() {
+        let newValue = Swift.min(value + step, max)
+        value = newValue
+        textValue = String(format: "%.0f", newValue)
+    }
+
+    private func decrementValue() {
+        let newValue = Swift.max(value - step, min)
+        value = newValue
+        textValue = String(format: "%.0f", newValue)
     }
 }
 

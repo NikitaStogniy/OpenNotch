@@ -13,6 +13,8 @@ class MediaControllerModule: NotchModule, ObservableObject {
     let id = "mediacontroller"
     let name = "Media Controller"
     let icon = "music.note"
+    let miniIcon = "music.note"
+    let side: ModuleSide = .right
     var priority: Int = 95
     var showInCollapsed: Bool { isPlaying }
 
@@ -373,103 +375,105 @@ struct MediaExpandedView: View {
     @State private var isHoveringCover = false
 
     var body: some View {
-        VStack(spacing: 16) {
-            // Song info
-            VStack(spacing: 4) {
-                Text(module.songTitle)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.white)
-                    .lineLimit(1)
-
-                Text(module.artistName)
-                    .font(.system(size: 13))
-                    .foregroundColor(.white.opacity(0.7))
-                    .lineLimit(1)
-            }
-
-            // Album art with play/pause overlay
-            ZStack {
-                if let albumArt = module.albumArt {
-                    Image(nsImage: albumArt)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 120, height: 120)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                } else {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.white.opacity(0.1))
-                        .frame(width: 120, height: 120)
-                        .overlay(
-                            Image(systemName: "music.note")
-                                .font(.system(size: 40))
-                                .foregroundColor(.white.opacity(0.3))
-                        )
-                }
-
-                // Play/Pause overlay on hover
-                if isHoveringCover {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.black.opacity(0.5))
-                        .frame(width: 120, height: 120)
-                        .overlay(
-                            Button(action: {
-                                module.playPause()
-                            }) {
-                                Image(systemName: module.isPlaying ? "pause.fill" : "play.fill")
-                                    .font(.system(size: 36))
-                                    .foregroundColor(.white)
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        )
-                }
-            }
-            .frame(width: 120, height: 120)
-            .onHover { hovering in
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    isHoveringCover = hovering
-                }
-            }
-
-            // Control buttons
-            HStack(spacing: 24) {
-                // Previous button
-                Button(action: {
-                    module.previousTrack()
-                }) {
-                    Image(systemName: "backward.fill")
-                        .font(.system(size: 20))
+        ModuleExpandedLayout(icon: "music.note", title: "Media Controller") {
+            VStack(spacing: 16) {
+                // Song info
+                VStack(spacing: 4) {
+                    Text(module.songTitle.isEmpty ? "No media playing" : module.songTitle)
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
-                        .frame(width: 32, height: 32)
-                }
-                .buttonStyle(PlainButtonStyle())
-                .contentShape(Rectangle())
+                        .lineLimit(1)
 
-                // Play/Pause button (always visible)
-                Button(action: {
-                    module.playPause()
-                }) {
-                    Image(systemName: module.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                        .font(.system(size: 32))
-                        .foregroundColor(.white)
+                    if !module.artistName.isEmpty {
+                        Text(module.artistName)
+                            .font(.system(size: 13))
+                            .foregroundColor(.white.opacity(0.7))
+                            .lineLimit(1)
+                    }
                 }
-                .buttonStyle(PlainButtonStyle())
-                .contentShape(Rectangle())
 
-                // Next button
-                Button(action: {
-                    module.nextTrack()
-                }) {
-                    Image(systemName: "forward.fill")
-                        .font(.system(size: 20))
-                        .foregroundColor(.white)
-                        .frame(width: 32, height: 32)
+                // Album art with play/pause overlay
+                ZStack {
+                    if let albumArt = module.albumArt {
+                        Image(nsImage: albumArt)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 120, height: 120)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    } else {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.white.opacity(0.1))
+                            .frame(width: 120, height: 120)
+                            .overlay(
+                                Image(systemName: "music.note")
+                                    .font(.system(size: 40))
+                                    .foregroundColor(.white.opacity(0.3))
+                            )
+                    }
+
+                    // Play/Pause overlay on hover
+                    if isHoveringCover {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.black.opacity(0.5))
+                            .frame(width: 120, height: 120)
+                            .overlay(
+                                Button(action: {
+                                    module.playPause()
+                                }) {
+                                    Image(systemName: module.isPlaying ? "pause.fill" : "play.fill")
+                                        .font(.system(size: 36))
+                                        .foregroundColor(.white)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            )
+                    }
                 }
-                .buttonStyle(PlainButtonStyle())
-                .contentShape(Rectangle())
+                .frame(width: 120, height: 120)
+                .onHover { hovering in
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isHoveringCover = hovering
+                    }
+                }
+
+                // Control buttons
+                HStack(spacing: 24) {
+                    // Previous button
+                    Button(action: {
+                        module.previousTrack()
+                    }) {
+                        Image(systemName: "backward.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .frame(width: 32, height: 32)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .contentShape(Rectangle())
+
+                    // Play/Pause button (always visible)
+                    Button(action: {
+                        module.playPause()
+                    }) {
+                        Image(systemName: module.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                            .font(.system(size: 32))
+                            .foregroundColor(.white)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .contentShape(Rectangle())
+
+                    // Next button
+                    Button(action: {
+                        module.nextTrack()
+                    }) {
+                        Image(systemName: "forward.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .frame(width: 32, height: 32)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .contentShape(Rectangle())
+                }
+                .padding(.top, 8)
             }
-            .padding(.top, 8)
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical, 20)
     }
 }

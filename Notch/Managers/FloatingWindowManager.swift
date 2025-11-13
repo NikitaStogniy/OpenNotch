@@ -55,33 +55,21 @@ class HitTestContentView: NSView {
     weak var hitTestManager: HitTestManager?
 
     override func hitTest(_ point: NSPoint) -> NSView? {
-        // If no hit test manager or no frame set yet, pass through to avoid blocking
+        // If no hit test manager or no frame set yet, use default behavior
         guard let manager = hitTestManager,
               manager.collapsedZoneFrame != nil else {
-            return nil
+            return super.hitTest(point)
         }
 
         // Check if point is in active zone
         if !manager.isInZone(point) {
-            // Point outside active zone - pass through
+            // Point outside active zone - pass through (click-through)
             return nil
         }
 
-        // Point inside active zone - manually check subviews
-        // This is necessary because super.hitTest(point) doesn't properly
-        // forward events to NSHostingView for SwiftUI interactions
-        for subview in subviews.reversed() {
-            // Convert point to subview's coordinate system
-            let convertedPoint = convert(point, to: subview)
-
-            // Let the subview handle hit testing (crucial for NSHostingView/SwiftUI)
-            if let hitView = subview.hitTest(convertedPoint) {
-                return hitView
-            }
-        }
-
-        // Point is in zone but not in any subview - return self
-        return self
+        // Point inside active zone - use default NSView hit testing
+        // This properly handles scroll events and all SwiftUI interactions
+        return super.hitTest(point)
     }
 }
 

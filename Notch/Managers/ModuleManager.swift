@@ -26,6 +26,7 @@ class ModuleManager: ObservableObject {
             CalendarModule(),
             MediaControllerModule(),
             TodoListModule(),
+            FileManagerModule(),
             // Future modules can be added here
         ]
     }
@@ -54,5 +55,44 @@ class ModuleManager: ObservableObject {
     /// Get modules that should show in collapsed state
     var collapsedModules: [any NotchModule] {
         enabledModules.filter { $0.showInCollapsed }
+    }
+
+    /// Get the effective side for a module (user preference or default)
+    func getEffectiveSide(for module: any NotchModule) -> ModuleSide {
+        let assignments = SettingsManager.shared.moduleSideAssignments
+        return assignments[module.id] ?? module.side
+    }
+
+    /// Get modules for the left side in user-defined order
+    var leftModules: [any NotchModule] {
+        let leftSideModules = collapsedModules.filter { getEffectiveSide(for: $0) == .left }
+        return sortModulesByUserOrder(leftSideModules, orderArray: SettingsManager.shared.moduleOrderLeft)
+    }
+
+    /// Get modules for the right side in user-defined order
+    var rightModules: [any NotchModule] {
+        let rightSideModules = collapsedModules.filter { getEffectiveSide(for: $0) == .right }
+        return sortModulesByUserOrder(rightSideModules, orderArray: SettingsManager.shared.moduleOrderRight)
+    }
+
+    /// Sort modules by user-defined order, fallback to priority
+    private func sortModulesByUserOrder(_ modules: [any NotchModule], orderArray: [String]) -> [any NotchModule] {
+        if orderArray.isEmpty {
+            // No user order defined, use priority
+            return modules.sorted { $0.priority > $1.priority }
+        }
+
+        // Sort by user order
+        return modules.sorted { module1, module2 in
+            let index1 = orderArray.firstIndex(of: module1.id) ?? Int.max
+            let index2 = orderArray.firstIndex(of: module2.id) ?? Int.max
+
+            if index1 == Int.max && index2 == Int.max {
+                // Neither in order array, sort by priority
+                return module1.priority > module2.priority
+            }
+
+            return index1 < index2
+        }
     }
 }

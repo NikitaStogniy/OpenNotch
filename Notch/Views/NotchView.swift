@@ -30,11 +30,7 @@ struct NotchView: View {
     @State private var hoverCollapseTask: Task<Void, Never>?
     @State private var isDraggingFile = false
     @State private var isDraggingFromNotch = false
-    @State private var showCalculator = false
-    @State private var calculatorKeyPressed: String? = nil
     @State private var currentModuleIndex = 0
-    @FocusState private var isFocused: Bool
-    @State private var lastEscapeTime: Date? = nil
 
     var body: some View {
         VStack(spacing: 0) {
@@ -51,64 +47,7 @@ struct NotchView: View {
         }
         .coordinateSpace(name: "rootView")
         .background(.clear)
-        .focusable()
-        .focused($isFocused)
-        .focusEffectDisabled()
-        .onKeyPress { keyPress in
-                // Only handle keys when expanded
-                guard notchState == .expanded else { return .ignored }
-
-                let key = keyPress.characters
-
-                // Check if this is a calculator key
-                let calculatorKeys = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                                     ".", "+", "-", "*", "/", "="]
-
-                if calculatorKeys.contains(key) ||
-                   keyPress.key == .return ||
-                   keyPress.key == .escape ||
-                   keyPress.key == .delete {
-
-                    // Auto-switch to calculator if not shown
-                    if !showCalculator {
-                        showCalculator = true
-                    }
-
-                    // Handle double ESC to exit calculator
-                    if keyPress.key == .escape && showCalculator {
-                        let now = Date()
-                        if let lastEscape = lastEscapeTime,
-                           now.timeIntervalSince(lastEscape) < 0.5 {
-                            // Double ESC - exit calculator
-                            showCalculator = false
-                            lastEscapeTime = nil
-                            return .handled
-                        } else {
-                            // First ESC - clear calculator
-                            lastEscapeTime = now
-                            calculatorKeyPressed = "\u{1B}"
-                            return .handled
-                        }
-                    }
-
-                    // Reset escape timer for non-escape keys
-                    lastEscapeTime = nil
-
-                    // Pass the key to calculator
-                    if keyPress.key == .return {
-                        calculatorKeyPressed = "\r"
-                    } else if keyPress.key == .delete {
-                        calculatorKeyPressed = "\u{7F}"
-                    } else {
-                        calculatorKeyPressed = key
-                    }
-
-                    return .handled
-                }
-
-                return .ignored
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .draggingFromNotch)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .draggingFromNotch)) { _ in
                 isDraggingFromNotch = true
             }
             .onReceive(NotificationCenter.default.publisher(for: .draggingFromNotchEnded)) { _ in
@@ -166,6 +105,7 @@ struct NotchView: View {
             VStack(spacing: 0) {
                 if notchState == .collapsed {
                     collapsedContent
+                        .padding(.horizontal, settings.collapsedPadding)
                         .transition(.opacity)
                 } else {
                     expandedContent
@@ -173,7 +113,6 @@ struct NotchView: View {
                 }
             }
             .animation(.easeOut(duration: settings.animationDuration), value: notchState)
-            .padding()
         }
         .frame(width: contentWidth, height: contentHeight)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: notchState)
@@ -193,8 +132,6 @@ struct NotchView: View {
             if hovering {
                 isHovering = true
                 notchState = .expanded
-                // Auto-focus when hovering
-                isFocused = true
             } else {
                 hoverCollapseTask = Task {
                     let delay = UInt64(settings.collapseDelay * 1_000_000_000)
@@ -204,8 +141,6 @@ struct NotchView: View {
                     isHovering = false
                     if !isDraggingFile {
                         notchState = .collapsed
-                        showCalculator = false  // Reset calculator state on collapse
-                        lastEscapeTime = nil  // Reset escape timer
                     }
                 }
             }
@@ -221,24 +156,35 @@ struct NotchView: View {
 
     // MARK: - Collapsed State
     private var collapsedContent: some View {
-        HStack(spacing: 12) {
-            // Show modules that have collapsed views
-            ForEach(Array(moduleManager.collapsedModules.enumerated()), id: \.element.id) { index, module in
-                module.collapsedView()
+        HStack(spacing: 8) {
+            // Left side modules
+            ForEach(Array(moduleManager.leftModules.enumerated()), id: \.element.id) { index, module in
+                Button(action: {
+                    // Expand notch and select this module
+                    if let moduleIndex = moduleManager.enabledModules.firstIndex(where: { $0.id == module.id }) {
+                        currentModuleIndex = moduleIndex
+                        notchState = .expanded
+                    }
+                }) {
+                    AnyView(module.collapsedView())
+                }
+                .buttonStyle(.plain)
             }
 
             Spacer()
 
-            // Legacy file count indicator (if file manager is enabled)
-            if settings.fileManagerEnabled {
-                HStack(spacing: 4) {
-                    Image(systemName: "doc.fill")
-                        .font(.system(size: 12))
-                    Text("\(storedFiles.count)")
-                        .font(.system(size: 12, weight: .semibold))
+            // Right side modules
+            ForEach(Array(moduleManager.rightModules.enumerated()), id: \.element.id) { index, module in
+                Button(action: {
+                    // Expand notch and select this module
+                    if let moduleIndex = moduleManager.enabledModules.firstIndex(where: { $0.id == module.id }) {
+                        currentModuleIndex = moduleIndex
+                        notchState = .expanded
+                    }
+                }) {
+                    AnyView(module.collapsedView())
                 }
-                .foregroundColor(settings.getAccentColor())
-                .opacity(0.8)
+                .buttonStyle(.plain)
             }
         }
         .foregroundColor(.white)
@@ -247,35 +193,22 @@ struct NotchView: View {
     // MARK: - Expanded State
     private var expandedContent: some View {
         VStack(spacing: 0) {
-            // Module tabs - show if we have multiple modules or legacy modules
+            // Module tabs - show if we have multiple modules
             let allModules = moduleManager.enabledModules
-            let hasLegacyModules = settings.calculatorEnabled || settings.fileManagerEnabled
-            let hasMultipleOptions = allModules.count + (hasLegacyModules ? 1 : 0) > 1
+            let hasMultipleOptions = allModules.count > 1
 
             if hasMultipleOptions {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        // New modules
+                        // Modules - using mini icons
                         ForEach(Array(allModules.enumerated()), id: \.element.id) { index, module in
                             ModuleTabButton(
                                 title: module.name,
-                                icon: module.icon,
-                                isSelected: currentModuleIndex == index && !showCalculator,
+                                icon: module.miniIcon,
+                                isSelected: currentModuleIndex == index,
+                                iconOnly: true,
                                 action: {
                                     currentModuleIndex = index
-                                    showCalculator = false
-                                }
-                            )
-                        }
-
-                        // Legacy modules button
-                        if hasLegacyModules {
-                            ModuleTabButton(
-                                title: settings.calculatorEnabled && settings.fileManagerEnabled ? "Legacy" : (settings.calculatorEnabled ? "Calculator" : "Files"),
-                                icon: "square.grid.2x2",
-                                isSelected: showCalculator || (allModules.isEmpty && hasLegacyModules),
-                                action: {
-                                    showCalculator = true
                                 }
                             )
                         }
@@ -287,10 +220,7 @@ struct NotchView: View {
 
             // Content
             Group {
-                if showCalculator || (allModules.isEmpty && hasLegacyModules) {
-                    // Show legacy module UI
-                    legacyModuleContent
-                } else if !allModules.isEmpty, currentModuleIndex < allModules.count {
+                if !allModules.isEmpty, currentModuleIndex < allModules.count {
                     // Show selected module
                     allModules[currentModuleIndex].expandedView()
                 } else {
@@ -312,52 +242,10 @@ struct NotchView: View {
                     }
                 }
             }
-            .animation(.easeInOut(duration: settings.animationDuration), value: showCalculator)
             .animation(.easeInOut(duration: settings.animationDuration), value: currentModuleIndex)
         }
     }
 
-    // Legacy module content (calculator/file manager)
-    @ViewBuilder
-    private var legacyModuleContent: some View {
-        VStack(spacing: 0) {
-            // Switch button if both are enabled
-            if settings.calculatorEnabled && settings.fileManagerEnabled {
-                HStack {
-                    Button(action: {
-                        showCalculator.toggle()
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: showCalculator ? "arrow.left" : "function")
-                                .font(.system(size: 10))
-                            Text(showCalculator ? "Back to files" : "Calculator")
-                                .font(.system(size: 11))
-                        }
-                        .foregroundColor(.white.opacity(0.7))
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(settings.getAccentColor().opacity(0.2))
-                        )
-                    }
-                    .buttonStyle(.plain)
-                    Spacer()
-                }
-                .padding(.bottom, 8)
-                .frame(height: 28)
-            }
-
-            // Legacy content
-            if settings.calculatorEnabled && showCalculator {
-                CalculatorView(keyPressed: $calculatorKeyPressed)
-            } else if settings.fileManagerEnabled {
-                FileManagerView(isDropTargeted: $isDropTargeted)
-            } else if settings.calculatorEnabled {
-                CalculatorView(keyPressed: $calculatorKeyPressed)
-            }
-        }
-    }
 }
 
 // MARK: - Module Tab Button
@@ -365,27 +253,42 @@ struct ModuleTabButton: View {
     let title: String
     let icon: String
     let isSelected: Bool
+    var iconOnly: Bool = false
     let action: () -> Void
 
     @StateObject private var settings = SettingsManager.shared
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 4) {
+            if iconOnly {
+                // Icon-only mode - just show the icon
                 Image(systemName: icon)
-                    .font(.system(size: 10))
-                Text(title)
-                    .font(.system(size: 11, weight: isSelected ? .semibold : .regular))
+                    .font(.system(size: 16))
+                    .foregroundColor(isSelected ? .white : .white.opacity(0.6))
+                    .frame(width: 28, height: 28)
+                    .background(
+                        Circle()
+                            .fill(isSelected ? settings.getAccentColor().opacity(0.3) : Color.white.opacity(0.05))
+                    )
+            } else {
+                // Full mode - show icon and text
+                HStack(spacing: 4) {
+                    Image(systemName: icon)
+                        .font(.system(size: 10))
+                    Text(title)
+                        .font(.system(size: 11, weight: isSelected ? .semibold : .regular))
+                }
+                .foregroundColor(isSelected ? .white : .white.opacity(0.6))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(isSelected ? settings.getAccentColor().opacity(0.3) : Color.white.opacity(0.05))
+                )
             }
-            .foregroundColor(isSelected ? .white : .white.opacity(0.6))
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(isSelected ? settings.getAccentColor().opacity(0.3) : Color.white.opacity(0.05))
-            )
         }
         .buttonStyle(.plain)
+        .help(title) // Tooltip showing full name
     }
 }
 

@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+/// Enum representing which side of the notch a module appears on
+enum ModuleSide: String, Codable {
+    case left
+    case right
+}
+
 /// Protocol that all notch modules must conform to
 protocol NotchModule: Identifiable {
     /// Unique identifier for the module
@@ -17,6 +23,12 @@ protocol NotchModule: Identifiable {
 
     /// Icon for the module (SF Symbol name)
     var icon: String { get }
+
+    /// Mini icon for collapsed state (SF Symbol name, 20x20pt)
+    var miniIcon: String { get }
+
+    /// Preferred side for the module in collapsed state
+    var side: ModuleSide { get }
 
     /// Whether the module is currently enabled
     var isEnabled: Bool { get set }
@@ -48,5 +60,15 @@ extension NotchModule {
     /// Default priority
     var priority: Int {
         0
+    }
+
+    /// Default: use same icon as main icon
+    var miniIcon: String {
+        icon
+    }
+
+    /// Default: appear on left side
+    var side: ModuleSide {
+        .left
     }
 }

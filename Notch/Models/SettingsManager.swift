@@ -46,6 +46,9 @@ class SettingsManager: ObservableObject {
     @AppStorage("cornerRadius") var cornerRadius: Double = 18 {
         willSet { objectWillChange.send() }
     }
+    @AppStorage("collapsedPadding") var collapsedPadding: Double = 12 {
+        willSet { objectWillChange.send() }
+    }
 
     // MARK: - Module Settings
     @AppStorage("calculatorEnabled") var calculatorEnabled: Bool = true {
@@ -53,6 +56,59 @@ class SettingsManager: ObservableObject {
     }
     @AppStorage("fileManagerEnabled") var fileManagerEnabled: Bool = true {
         willSet { objectWillChange.send() }
+    }
+
+    // Module positioning settings
+    @AppStorage("moduleOrderLeft") private var moduleOrderLeftData: Data = Data() {
+        willSet { objectWillChange.send() }
+    }
+    @AppStorage("moduleOrderRight") private var moduleOrderRightData: Data = Data() {
+        willSet { objectWillChange.send() }
+    }
+    @AppStorage("moduleSideAssignments") private var moduleSideAssignmentsData: Data = Data() {
+        willSet { objectWillChange.send() }
+    }
+
+    var moduleOrderLeft: [String] {
+        get {
+            if let decoded = try? JSONDecoder().decode([String].self, from: moduleOrderLeftData) {
+                return decoded
+            }
+            return []
+        }
+        set {
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                moduleOrderLeftData = encoded
+            }
+        }
+    }
+
+    var moduleOrderRight: [String] {
+        get {
+            if let decoded = try? JSONDecoder().decode([String].self, from: moduleOrderRightData) {
+                return decoded
+            }
+            return []
+        }
+        set {
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                moduleOrderRightData = encoded
+            }
+        }
+    }
+
+    var moduleSideAssignments: [String: ModuleSide] {
+        get {
+            if let decoded = try? JSONDecoder().decode([String: ModuleSide].self, from: moduleSideAssignmentsData) {
+                return decoded
+            }
+            return [:]
+        }
+        set {
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                moduleSideAssignmentsData = encoded
+            }
+        }
     }
 
     // MARK: - Behavior Settings
@@ -81,6 +137,7 @@ class SettingsManager: ObservableObject {
         expandedWidth = 680
         expandedHeight = 360
         cornerRadius = 18
+        collapsedPadding = 12
 
         calculatorEnabled = true
         fileManagerEnabled = true
