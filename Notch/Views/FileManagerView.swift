@@ -22,7 +22,7 @@ struct FileManagerView: View {
     @State private var isDraggingFromNotch = false
 
     var body: some View {
-        ModuleExpandedLayout(icon: "folder", title: "Files") {
+        ModuleExpandedLayout(icon: "folder", title: NSLocalizedString("module.filemanager.name", comment: "")) {
             if storedFiles.isEmpty {
                 dropZoneView
             } else {
@@ -43,7 +43,7 @@ struct FileManagerView: View {
                 .font(.system(size: 40))
                 .foregroundColor(isDropTargeted ? .blue : .white.opacity(0.5))
                 .symbolEffect(.bounce, value: isDropTargeted)
-            Text(isDropTargeted ? "Release to add" : "Drop files here")
+            Text(isDropTargeted ? NSLocalizedString("filemanager.drop.release", comment: "") : NSLocalizedString("filemanager.drop.prompt", comment: ""))
                 .font(.caption)
                 .foregroundColor(.white.opacity(0.6))
         }

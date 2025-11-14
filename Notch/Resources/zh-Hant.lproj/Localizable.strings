@@ -1,0 +1,195 @@
+/*
+  Localizable.strings (Traditional Chinese)
+  Notch
+
+  Created for OpenNotch localization
+*/
+
+// MARK: - App
+"app.name" = "Notch";
+
+// MARK: - Common Buttons
+"button.ok" = "確定";
+
+// MARK: - Settings Window
+"settings.window.title" = "設定";
+"settings.tab.appearance" = "外觀";
+"settings.tab.modules" = "模組";
+
+// MARK: - Appearance Settings
+"settings.appearance.title" = "外觀";
+"settings.appearance.description" = "自訂您的 notch 視覺外觀和行為";
+
+// MARK: - Theme Settings
+"settings.theme.title" = "主題";
+"settings.theme.description" = "儲存和載入您的外觀設定作為主題";
+"settings.theme.name.label" = "主題名稱";
+"settings.theme.name.placeholder" = "輸入主題名稱";
+"settings.theme.export.button" = "匯出主題";
+"settings.theme.import.button" = "匯入主題";
+"settings.theme.export.success" = "主題匯出成功！";
+"settings.theme.export.message" = "將您的主題匯出為 JSON 檔案";
+"settings.theme.import.message" = "選擇要匯入的主題 JSON 檔案";
+"settings.theme.export.error" = "匯出主題失敗：%@";
+"settings.theme.import.error" = "匯入主題失敗：%@";
+"settings.theme.preset.label" = "預設主題";
+
+// MARK: - Settings Mode
+"settings.mode.label" = "設定模式";
+"settings.mode.simple" = "簡單";
+"settings.mode.advanced" = "進階";
+
+// MARK: - Color Settings
+"settings.colors.title" = "顏色";
+"settings.colors.description" = "選擇您的 notch 背景和強調元素的配色方案";
+"settings.colors.background.label" = "背景顏色";
+"settings.colors.accent.label" = "強調顏色";
+"settings.colors.black" = "黑色";
+"settings.colors.dark_gray" = "深灰色";
+"settings.colors.dark_blue" = "深藍色";
+"settings.colors.dark_purple" = "深紫色";
+"settings.colors.blue" = "藍色";
+"settings.colors.purple" = "紫色";
+"settings.colors.pink" = "粉紅色";
+"settings.colors.green" = "綠色";
+"settings.colors.orange" = "橙色";
+
+// MARK: - Opacity Settings
+"settings.opacity.title" = "不透明度";
+"settings.opacity.description" = "調整 notch 背景和邊框的透明度";
+"settings.opacity.background.label" = "背景不透明度";
+"settings.opacity.border.label" = "邊框不透明度";
+
+// MARK: - Size Settings
+"settings.size.title" = "大小";
+"settings.size.description" = "配置收合和展開狀態的尺寸和圓角半徑";
+"settings.size.corner_radius.label" = "圓角半徑";
+"settings.size.dimensions.label" = "尺寸";
+"settings.size.collapsed_width.label" = "收合寬度";
+"settings.size.collapsed_height.label" = "收合高度";
+"settings.size.expanded_width.label" = "展開寬度";
+"settings.size.expanded_height.label" = "展開高度";
+"settings.size.spacing.label" = "間距";
+"settings.size.collapsed_padding.label" = "收合內邊距";
+
+// MARK: - Interaction Settings
+"settings.interaction.title" = "互動";
+"settings.interaction.description" = "控制 notch 如何回應滑鼠懸停和點擊";
+"settings.interaction.auto_expand.label" = "懸停時自動展開";
+"settings.interaction.collapse_delay.label" = "收合延遲";
+
+// MARK: - Animation Settings
+"settings.animations.title" = "動畫";
+"settings.animations.description" = "調整動畫速度和流暢度";
+"settings.animations.duration.label" = "動畫持續時間";
+
+// MARK: - Reset Button
+"settings.reset.button" = "重設為預設值";
+
+// MARK: - Modules Settings
+"settings.modules.title" = "模組";
+"settings.modules.description" = "在您的 notch 中啟用或停用功能和小工具";
+"settings.modules.available.title" = "可用模組";
+"settings.modules.available.description" = "具有增強功能的模組化小工具";
+"settings.modules.drag.title" = "拖曳以排列";
+"settings.modules.drag.description" = "使用上方的 notch 預覽來啟用、停用和排列模組";
+"settings.modules.empty.title" = "沒有可用的模組";
+"settings.modules.empty.description" = "模組可用時將顯示在此處";
+"settings.modules.status.enabled" = "已啟用";
+"settings.modules.status.disabled" = "已停用";
+
+// MARK: - Menu Bar
+"menu.notch.hide" = "隱藏 Notch";
+"menu.notch.show" = "顯示 Notch";
+"menu.recent_files.title" = "最近的檔案 (%d)";
+"menu.settings" = "設定";
+"menu.about" = "關於";
+"menu.quit" = "結束 Notch";
+
+// MARK: - About Dialog
+"about.title" = "關於 Notch";
+"about.subtitle" = "互動式 MacBook Notch 管理器";
+"about.version" = "版本：%@";
+"about.description" = "一個漂亮、動畫化的 notch 介面，用於管理檔案和控制您的 MacBook 上的音樂。";
+"about.credits" = "由 Nikita Stogniy 創建";
+"about.copyright" = "© 2025";
+
+// MARK: - Notch View
+"notch.empty.title" = "沒有啟用的模組";
+"notch.empty.message" = "在設定中啟用模組";
+
+// MARK: - Preview
+"preview.arrangement.title" = "模組排列";
+"preview.arrangement.instructions" = "拖曳圖示以排列，或拖曳到底部以停用";
+"preview.overflow.warning.title" = "模組太多！";
+"preview.overflow.warning.both" = "兩側的某些模組將被隱藏在物理 notch 後面";
+"preview.overflow.warning.left" = "左側的某些模組將被隱藏在物理 notch 後面";
+"preview.overflow.warning.right" = "右側的某些模組將被隱藏在物理 notch 後面";
+"preview.disabled.title" = "已停用的模組";
+"preview.disabled.drop_prompt" = "拖曳到此處以停用";
+"preview.physical_notch.label" = "物理 Notch";
+
+// MARK: - Arrangement View
+"arrangement.title" = "模組排列";
+"arrangement.instructions" = "拖曳模組以重新排序或在兩側之間移動";
+"arrangement.left_side" = "左側";
+"arrangement.right_side" = "右側";
+"arrangement.drop_prompt" = "將模組拖曳到此處";
+
+// MARK: - Module: To-Do List
+"module.todolist.name" = "待辦事項清單";
+"module.todolist.description" = "管理您的日常任務，自動清理已完成的項目";
+"todo.new_task.placeholder" = "新任務...";
+"todo.empty.title" = "沒有任務";
+
+// MARK: - Module: Calendar
+"module.calendar.name" = "行事曆";
+"module.calendar.description" = "檢視您的行事曆事件和約會";
+"calendar.today.button" = "今天";
+"calendar.permission.title" = "需要行事曆存取權限";
+"calendar.permission.message" = "允許存取以檢視您即將發生的事件";
+"calendar.permission.grant" = "授予存取權限";
+"calendar.empty.title" = "沒有即將發生的事件";
+"calendar.empty.message" = "您未來 7 天都是空閒的";
+"calendar.upcoming.title" = "即將發生的事件";
+"calendar.event.all_day" = "全天";
+"calendar.event.untitled" = "未命名事件";
+"calendar.day.empty" = "這一天沒有事件";
+
+// MARK: - Module: Media Controller
+"module.mediacontroller.name" = "媒體控制器";
+"module.mediacontroller.description" = "控制您的音樂播放";
+"media.empty.message" = "沒有正在播放的媒體";
+
+// MARK: - Module: File Manager
+"module.filemanager.name" = "檔案";
+"module.filemanager.description" = "拖放檔案以快速存取";
+"filemanager.drop.release" = "放開以新增";
+"filemanager.drop.prompt" = "將檔案拖曳到此處";
+
+// MARK: - Module: Calculator
+"module.calculator.description" = "可透過鍵盤快捷鍵存取的快速計算機";
+
+// MARK: - Module: Custom
+"module.custom.description" = "自訂模組";
+
+// MARK: - Preset Themes
+"theme.preset.classic_dark" = "經典深色";
+"theme.preset.midnight_purple" = "午夜紫";
+"theme.preset.ocean_blue" = "海洋藍";
+"theme.preset.minimal" = "極簡";
+"theme.default.name" = "我的主題";
+
+// MARK: - Theme Errors
+"theme.error.invalid_json" = "無效的 JSON 格式";
+"theme.error.invalid_background" = "無效的背景顏色。必須是以下之一：black、gray、blue、purple";
+"theme.error.invalid_accent" = "無效的強調顏色。必須是以下之一：blue、purple、pink、green、orange";
+"theme.error.background_opacity" = "背景不透明度必須介於 50%% 和 100%% 之間";
+"theme.error.border_opacity" = "邊框不透明度必須介於 0%% 和 50%% 之間";
+"theme.error.corner_radius" = "圓角半徑必須介於 8 和 32 之間";
+"theme.error.collapsed_width" = "收合寬度必須介於 200 和 400 之間";
+"theme.error.collapsed_height" = "收合高度必須介於 30 和 100 之間";
+"theme.error.expanded_width" = "展開寬度必須介於 500 和 800 之間";
+"theme.error.expanded_height" = "展開高度必須介於 300 和 1000 之間";
+"theme.error.file_not_found" = "找不到主題檔案";
+"theme.error.export_failed" = "匯出主題失敗";

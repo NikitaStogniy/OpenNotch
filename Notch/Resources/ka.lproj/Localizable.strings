@@ -1,0 +1,195 @@
+/*
+  Localizable.strings (Georgian)
+  Notch
+
+  Created for OpenNotch localization
+*/
+
+// MARK: - App
+"app.name" = "Notch";
+
+// MARK: - Common Buttons
+"button.ok" = "კარგი";
+
+// MARK: - Settings Window
+"settings.window.title" = "პარამეტრები";
+"settings.tab.appearance" = "გარეგნობა";
+"settings.tab.modules" = "მოდულები";
+
+// MARK: - Appearance Settings
+"settings.appearance.title" = "გარეგნობა";
+"settings.appearance.description" = "მოარგეთ თქვენი notch-ის ვიზუალური გარეგნობა და ქცევა";
+
+// MARK: - Theme Settings
+"settings.theme.title" = "თემა";
+"settings.theme.description" = "შეინახეთ და ჩატვირთეთ თქვენი გარეგნობის პარამეტრები როგორც თემები";
+"settings.theme.name.label" = "თემის სახელი";
+"settings.theme.name.placeholder" = "შეიყვანეთ თემის სახელი";
+"settings.theme.export.button" = "თემის ექსპორტი";
+"settings.theme.import.button" = "თემის იმპორტი";
+"settings.theme.export.success" = "თემა წარმატებით ექსპორტირდა!";
+"settings.theme.export.message" = "ექსპორტირეთ თქვენი თემა JSON ფაილად";
+"settings.theme.import.message" = "აირჩიეთ თემის JSON ფაილი იმპორტისთვის";
+"settings.theme.export.error" = "თემის ექსპორტი ვერ მოხერხდა: %@";
+"settings.theme.import.error" = "თემის იმპორტი ვერ მოხერხდა: %@";
+"settings.theme.preset.label" = "წინასწარ დაყენებული თემები";
+
+// MARK: - Settings Mode
+"settings.mode.label" = "პარამეტრების რეჟიმი";
+"settings.mode.simple" = "მარტივი";
+"settings.mode.advanced" = "გაფართოებული";
+
+// MARK: - Color Settings
+"settings.colors.title" = "ფერები";
+"settings.colors.description" = "აირჩიეთ ფერთა სქემა თქვენი notch-ის ფონისა და აქცენტის ელემენტებისთვის";
+"settings.colors.background.label" = "ფონის ფერი";
+"settings.colors.accent.label" = "აქცენტის ფერი";
+"settings.colors.black" = "შავი";
+"settings.colors.dark_gray" = "მუქი რუხი";
+"settings.colors.dark_blue" = "მუქი ლურჯი";
+"settings.colors.dark_purple" = "მუქი იისფერი";
+"settings.colors.blue" = "ლურჯი";
+"settings.colors.purple" = "იისფერი";
+"settings.colors.pink" = "ვარდისფერი";
+"settings.colors.green" = "მწვანე";
+"settings.colors.orange" = "ნარინჯისფერი";
+
+// MARK: - Opacity Settings
+"settings.opacity.title" = "გაუმჭვირვალობა";
+"settings.opacity.description" = "დაარეგულირეთ გამჭვირვალობის დონეები notch-ის ფონისა და საზღვრისთვის";
+"settings.opacity.background.label" = "ფონის გაუმჭვირვალობა";
+"settings.opacity.border.label" = "საზღვრის გაუმჭვირვალობა";
+
+// MARK: - Size Settings
+"settings.size.title" = "ზომა";
+"settings.size.description" = "დააკონფიგურირეთ ზომები და კუთხის რადიუსი შეკუმშული და გაშლილი მდგომარეობებისთვის";
+"settings.size.corner_radius.label" = "კუთხის რადიუსი";
+"settings.size.dimensions.label" = "განზომილებები";
+"settings.size.collapsed_width.label" = "შეკუმშული სიგანე";
+"settings.size.collapsed_height.label" = "შეკუმშული სიმაღლე";
+"settings.size.expanded_width.label" = "გაშლილი სიგანე";
+"settings.size.expanded_height.label" = "გაშლილი სიმაღლე";
+"settings.size.spacing.label" = "დაშორება";
+"settings.size.collapsed_padding.label" = "შეკუმშული ინტერვალი";
+
+// MARK: - Interaction Settings
+"settings.interaction.title" = "ინტერაქცია";
+"settings.interaction.description" = "გააკონტროლეთ როგორ რეაგირებს notch თაგუნას მიტანასა და დაწკაპუნებაზე";
+"settings.interaction.auto_expand.label" = "ავტომატური გაშლა მიტანისას";
+"settings.interaction.collapse_delay.label" = "შეკუმშვის დაყოვნება";
+
+// MARK: - Animation Settings
+"settings.animations.title" = "ანიმაციები";
+"settings.animations.description" = "დაარეგულირეთ ანიმაციის სიჩქარე და სიგლუვე";
+"settings.animations.duration.label" = "ანიმაციის ხანგრძლივობა";
+
+// MARK: - Reset Button
+"settings.reset.button" = "საწყის პარამეტრებზე დაბრუნება";
+
+// MARK: - Modules Settings
+"settings.modules.title" = "მოდულები";
+"settings.modules.description" = "ჩართეთ ან გამორთეთ ფუნქციები და ვიჯეტები თქვენს notch-ში";
+"settings.modules.available.title" = "ხელმისაწვდომი მოდულები";
+"settings.modules.available.description" = "მოდულური ვიჯეტები გაძლიერებული ფუნქციონალით";
+"settings.modules.drag.title" = "გადაიტანეთ მოწესრიგებისთვის";
+"settings.modules.drag.description" = "გამოიყენეთ ზედა notch-ის გადახედვა მოდულების ჩასართავად, გამოსართავად და მოსაწესრიგებლად";
+"settings.modules.empty.title" = "არ არის ხელმისაწვდომი მოდულები";
+"settings.modules.empty.description" = "მოდულები გამოჩნდება აქ, როდესაც ხელმისაწვდომი იქნება";
+"settings.modules.status.enabled" = "ჩართული";
+"settings.modules.status.disabled" = "გამორთული";
+
+// MARK: - Menu Bar
+"menu.notch.hide" = "Notch-ის დამალვა";
+"menu.notch.show" = "Notch-ის ჩვენება";
+"menu.recent_files.title" = "ბოლო ფაილები (%d)";
+"menu.settings" = "პარამეტრები";
+"menu.about" = "შესახებ";
+"menu.quit" = "Notch-დან გასვლა";
+
+// MARK: - About Dialog
+"about.title" = "Notch-ის შესახებ";
+"about.subtitle" = "ინტერაქტიული MacBook Notch მენეჯერი";
+"about.version" = "ვერსია: %@";
+"about.description" = "ლამაზი, ანიმირებული notch ინტერფეისი ფაილების მართვისა და მუსიკის კონტროლისთვის თქვენს MacBook-ზე.";
+"about.credits" = "შექმნილია ნიკიტა სტოგნის მიერ";
+"about.copyright" = "© 2025";
+
+// MARK: - Notch View
+"notch.empty.title" = "მოდულები არ არის ჩართული";
+"notch.empty.message" = "ჩართეთ მოდულები პარამეტრებში";
+
+// MARK: - Preview
+"preview.arrangement.title" = "მოდულების განლაგება";
+"preview.arrangement.instructions" = "გადაიტანეთ ხატულები მოსაწესრიგებლად ან გადაიტანეთ ქვემოთ გამოსართავად";
+"preview.overflow.warning.title" = "ძალიან ბევრი მოდული!";
+"preview.overflow.warning.both" = "ზოგიერთი მოდული ორივე მხარეს დაიმალება ფიზიკური notch-ის უკან";
+"preview.overflow.warning.left" = "ზოგიერთი მოდული მარცხენა მხარეს დაიმალება ფიზიკური notch-ის უკან";
+"preview.overflow.warning.right" = "ზოგიერთი მოდული მარჯვენა მხარეს დაიმალება ფიზიკური notch-ის უკან";
+"preview.disabled.title" = "გამორთული მოდულები";
+"preview.disabled.drop_prompt" = "გადმოიტანეთ აქ გამოსართავად";
+"preview.physical_notch.label" = "ფიზიკური Notch";
+
+// MARK: - Arrangement View
+"arrangement.title" = "მოდულების განლაგება";
+"arrangement.instructions" = "გადაიტანეთ მოდულები ხელახლა მოსაწესრიგებლად ან მხარეებს შორის გადასატანად";
+"arrangement.left_side" = "მარცხენა მხარე";
+"arrangement.right_side" = "მარჯვენა მხარე";
+"arrangement.drop_prompt" = "გადმოიტანეთ მოდულები აქ";
+
+// MARK: - Module: To-Do List
+"module.todolist.name" = "დავალებების სია";
+"module.todolist.description" = "მართეთ თქვენი ყოველდღიური დავალებები შესრულებული ელემენტების ავტომატური გასუფთავებით";
+"todo.new_task.placeholder" = "ახალი დავალება...";
+"todo.empty.title" = "არ არის დავალებები";
+
+// MARK: - Module: Calendar
+"module.calendar.name" = "კალენდარი";
+"module.calendar.description" = "იხილეთ თქვენი კალენდრის მოვლენები და შეხვედრები";
+"calendar.today.button" = "დღეს";
+"calendar.permission.title" = "საჭიროა კალენდრის წვდომა";
+"calendar.permission.message" = "მიეცით წვდომა თქვენი მომავალი მოვლენების სანახავად";
+"calendar.permission.grant" = "წვდომის მინიჭება";
+"calendar.empty.title" = "არ არის მომავალი მოვლენები";
+"calendar.empty.message" = "თქვენ თავისუფალი ხართ შემდეგი 7 დღის განმავლობაში";
+"calendar.upcoming.title" = "მომავალი მოვლენები";
+"calendar.event.all_day" = "მთელი დღე";
+"calendar.event.untitled" = "უსახელო მოვლენა";
+"calendar.day.empty" = "ამ დღეს მოვლენები არ არის";
+
+// MARK: - Module: Media Controller
+"module.mediacontroller.name" = "მედია კონტროლერი";
+"module.mediacontroller.description" = "გააკონტროლეთ თქვენი მუსიკის დაკვრა";
+"media.empty.message" = "მედია არ იკვრება";
+
+// MARK: - Module: File Manager
+"module.filemanager.name" = "ფაილები";
+"module.filemanager.description" = "გადაიტანეთ და გადმოიტანეთ ფაილები სწრაფი წვდომისთვის";
+"filemanager.drop.release" = "გაუშვით დასამატებლად";
+"filemanager.drop.prompt" = "გადმოიტანეთ ფაილები აქ";
+
+// MARK: - Module: Calculator
+"module.calculator.description" = "სწრაფი კალკულატორი ხელმისაწვდომი კლავიატურის მალსახმობებით";
+
+// MARK: - Module: Custom
+"module.custom.description" = "მორგებული მოდული";
+
+// MARK: - Preset Themes
+"theme.preset.classic_dark" = "კლასიკური მუქი";
+"theme.preset.midnight_purple" = "შუაღამის იისფერი";
+"theme.preset.ocean_blue" = "ოკეანის ლურჯი";
+"theme.preset.minimal" = "მინიმალისტური";
+"theme.default.name" = "ჩემი თემა";
+
+// MARK: - Theme Errors
+"theme.error.invalid_json" = "არასწორი JSON ფორმატი";
+"theme.error.invalid_background" = "არასწორი ფონის ფერი. უნდა იყოს ერთ-ერთი: black, gray, blue, purple";
+"theme.error.invalid_accent" = "არასწორი აქცენტის ფერი. უნდა იყოს ერთ-ერთი: blue, purple, pink, green, orange";
+"theme.error.background_opacity" = "ფონის გაუმჭვირვალობა უნდა იყოს 50%%-სა და 100%%-ს შორის";
+"theme.error.border_opacity" = "საზღვრის გაუმჭვირვალობა უნდა იყოს 0%%-სა და 50%%-ს შორის";
+"theme.error.corner_radius" = "კუთხის რადიუსი უნდა იყოს 8-სა და 32-ს შორის";
+"theme.error.collapsed_width" = "შეკუმშული სიგანე უნდა იყოს 200-სა და 400-ს შორის";
+"theme.error.collapsed_height" = "შეკუმშული სიმაღლე უნდა იყოს 30-სა და 100-ს შორის";
+"theme.error.expanded_width" = "გაშლილი სიგანე უნდა იყოს 500-სა და 800-ს შორის";
+"theme.error.expanded_height" = "გაშლილი სიმაღლე უნდა იყოს 300-სა და 1000-ს შორის";
+"theme.error.file_not_found" = "თემის ფაილი ვერ მოიძებნა";
+"theme.error.export_failed" = "თემის ექსპორტი ვერ მოხერხდა";

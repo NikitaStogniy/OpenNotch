@@ -11,7 +11,9 @@ import Combine
 
 class MediaControllerModule: NotchModule, ObservableObject {
     let id = "mediacontroller"
-    let name = "Media Controller"
+    var name: String {
+        NSLocalizedString("module.mediacontroller.name", comment: "")
+    }
     let icon = "music.note"
     let miniIcon = "music.note"
     let side: ModuleSide = .right
@@ -375,11 +377,11 @@ struct MediaExpandedView: View {
     @State private var isHoveringCover = false
 
     var body: some View {
-        ModuleExpandedLayout(icon: "music.note", title: "Media Controller") {
+        ModuleExpandedLayout(icon: "music.note", title: NSLocalizedString("module.mediacontroller.name", comment: "")) {
             VStack(spacing: 16) {
                 // Song info
                 VStack(spacing: 4) {
-                    Text(module.songTitle.isEmpty ? "No media playing" : module.songTitle)
+                    Text(module.songTitle.isEmpty ? NSLocalizedString("media.empty.message", comment: "") : module.songTitle)
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.white)
                         .lineLimit(1)

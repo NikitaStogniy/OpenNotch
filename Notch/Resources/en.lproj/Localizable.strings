@@ -1,0 +1,195 @@
+/*
+  Localizable.strings (English)
+  Notch
+
+  Created for OpenNotch localization
+*/
+
+// MARK: - App
+"app.name" = "Notch";
+
+// MARK: - Common Buttons
+"button.ok" = "OK";
+
+// MARK: - Settings Window
+"settings.window.title" = "Settings";
+"settings.tab.appearance" = "Appearance";
+"settings.tab.modules" = "Modules";
+
+// MARK: - Appearance Settings
+"settings.appearance.title" = "Appearance";
+"settings.appearance.description" = "Customize the visual appearance and behavior of your notch";
+
+// MARK: - Theme Settings
+"settings.theme.title" = "Theme";
+"settings.theme.description" = "Save and load your appearance settings as themes";
+"settings.theme.name.label" = "Theme Name";
+"settings.theme.name.placeholder" = "Enter theme name";
+"settings.theme.export.button" = "Export Theme";
+"settings.theme.import.button" = "Import Theme";
+"settings.theme.export.success" = "Theme exported successfully!";
+"settings.theme.export.message" = "Export your theme as a JSON file";
+"settings.theme.import.message" = "Select a theme JSON file to import";
+"settings.theme.export.error" = "Failed to export theme: %@";
+"settings.theme.import.error" = "Failed to import theme: %@";
+"settings.theme.preset.label" = "Preset Themes";
+
+// MARK: - Settings Mode
+"settings.mode.label" = "Settings Mode";
+"settings.mode.simple" = "Simple";
+"settings.mode.advanced" = "Advanced";
+
+// MARK: - Color Settings
+"settings.colors.title" = "Colors";
+"settings.colors.description" = "Choose the color scheme for your notch background and accent elements";
+"settings.colors.background.label" = "Background Color";
+"settings.colors.accent.label" = "Accent Color";
+"settings.colors.black" = "Black";
+"settings.colors.dark_gray" = "Dark Gray";
+"settings.colors.dark_blue" = "Dark Blue";
+"settings.colors.dark_purple" = "Dark Purple";
+"settings.colors.blue" = "Blue";
+"settings.colors.purple" = "Purple";
+"settings.colors.pink" = "Pink";
+"settings.colors.green" = "Green";
+"settings.colors.orange" = "Orange";
+
+// MARK: - Opacity Settings
+"settings.opacity.title" = "Opacity";
+"settings.opacity.description" = "Adjust transparency levels for the notch background and border";
+"settings.opacity.background.label" = "Background Opacity";
+"settings.opacity.border.label" = "Border Opacity";
+
+// MARK: - Size Settings
+"settings.size.title" = "Size";
+"settings.size.description" = "Configure dimensions and corner radius for collapsed and expanded states";
+"settings.size.corner_radius.label" = "Corner Radius";
+"settings.size.dimensions.label" = "Dimensions";
+"settings.size.collapsed_width.label" = "Collapsed Width";
+"settings.size.collapsed_height.label" = "Collapsed Height";
+"settings.size.expanded_width.label" = "Expanded Width";
+"settings.size.expanded_height.label" = "Expanded Height";
+"settings.size.spacing.label" = "Spacing";
+"settings.size.collapsed_padding.label" = "Collapsed Padding";
+
+// MARK: - Interaction Settings
+"settings.interaction.title" = "Interaction";
+"settings.interaction.description" = "Control how the notch responds to mouse hover and clicks";
+"settings.interaction.auto_expand.label" = "Auto-expand on hover";
+"settings.interaction.collapse_delay.label" = "Collapse Delay";
+
+// MARK: - Animation Settings
+"settings.animations.title" = "Animations";
+"settings.animations.description" = "Adjust animation speed and smoothness";
+"settings.animations.duration.label" = "Animation Duration";
+
+// MARK: - Reset Button
+"settings.reset.button" = "Reset to Defaults";
+
+// MARK: - Modules Settings
+"settings.modules.title" = "Modules";
+"settings.modules.description" = "Enable or disable features and widgets in your notch";
+"settings.modules.available.title" = "Available Modules";
+"settings.modules.available.description" = "Modular widgets with enhanced functionality";
+"settings.modules.drag.title" = "Drag to arrange";
+"settings.modules.drag.description" = "Use the notch preview above to enable, disable, and arrange modules";
+"settings.modules.empty.title" = "No modules available";
+"settings.modules.empty.description" = "Modules will appear here when available";
+"settings.modules.status.enabled" = "Enabled";
+"settings.modules.status.disabled" = "Disabled";
+
+// MARK: - Menu Bar
+"menu.notch.hide" = "Hide Notch";
+"menu.notch.show" = "Show Notch";
+"menu.recent_files.title" = "Recent Files (%d)";
+"menu.settings" = "Settings";
+"menu.about" = "About";
+"menu.quit" = "Quit Notch";
+
+// MARK: - About Dialog
+"about.title" = "About Notch";
+"about.subtitle" = "Interactive MacBook Notch Manager";
+"about.version" = "Version: %@";
+"about.description" = "A beautiful, animated notch interface for managing files and controlling music on your MacBook.";
+"about.credits" = "Created by Nikita Stogniy";
+"about.copyright" = "© 2025";
+
+// MARK: - Notch View
+"notch.empty.title" = "No modules enabled";
+"notch.empty.message" = "Enable modules in Settings";
+
+// MARK: - Preview
+"preview.arrangement.title" = "Module Arrangement";
+"preview.arrangement.instructions" = "Drag icons to arrange, or drag to bottom to disable";
+"preview.overflow.warning.title" = "Too many modules!";
+"preview.overflow.warning.both" = "Some modules on both sides will be hidden behind the physical notch";
+"preview.overflow.warning.left" = "Some modules on the left will be hidden behind the physical notch";
+"preview.overflow.warning.right" = "Some modules on the right will be hidden behind the physical notch";
+"preview.disabled.title" = "Disabled Modules";
+"preview.disabled.drop_prompt" = "Drop here to disable";
+"preview.physical_notch.label" = "Physical Notch";
+
+// MARK: - Arrangement View
+"arrangement.title" = "Module Arrangement";
+"arrangement.instructions" = "Drag modules to reorder or move between sides";
+"arrangement.left_side" = "Left Side";
+"arrangement.right_side" = "Right Side";
+"arrangement.drop_prompt" = "Drop modules here";
+
+// MARK: - Module: To-Do List
+"module.todolist.name" = "To-Do List";
+"module.todolist.description" = "Manage your daily tasks with automatic cleanup of completed items";
+"todo.new_task.placeholder" = "New task...";
+"todo.empty.title" = "No tasks";
+
+// MARK: - Module: Calendar
+"module.calendar.name" = "Calendar";
+"module.calendar.description" = "View your calendar events and appointments";
+"calendar.today.button" = "Today";
+"calendar.permission.title" = "Calendar Access Required";
+"calendar.permission.message" = "Allow access to view your upcoming events";
+"calendar.permission.grant" = "Grant Access";
+"calendar.empty.title" = "No upcoming events";
+"calendar.empty.message" = "You're all clear for the next 7 days";
+"calendar.upcoming.title" = "Upcoming Events";
+"calendar.event.all_day" = "All day";
+"calendar.event.untitled" = "Untitled Event";
+"calendar.day.empty" = "No events on this day";
+
+// MARK: - Module: Media Controller
+"module.mediacontroller.name" = "Media Controller";
+"module.mediacontroller.description" = "Control your music playback";
+"media.empty.message" = "No media playing";
+
+// MARK: - Module: File Manager
+"module.filemanager.name" = "Files";
+"module.filemanager.description" = "Drag and drop files for quick access";
+"filemanager.drop.release" = "Release to add";
+"filemanager.drop.prompt" = "Drop files here";
+
+// MARK: - Module: Calculator
+"module.calculator.description" = "Quick calculator accessible via keyboard shortcuts";
+
+// MARK: - Module: Custom
+"module.custom.description" = "Custom module";
+
+// MARK: - Preset Themes
+"theme.preset.classic_dark" = "Classic Dark";
+"theme.preset.midnight_purple" = "Midnight Purple";
+"theme.preset.ocean_blue" = "Ocean Blue";
+"theme.preset.minimal" = "Minimal";
+"theme.default.name" = "My Theme";
+
+// MARK: - Theme Errors
+"theme.error.invalid_json" = "Invalid JSON format";
+"theme.error.invalid_background" = "Invalid background color. Must be one of: black, gray, blue, purple";
+"theme.error.invalid_accent" = "Invalid accent color. Must be one of: blue, purple, pink, green, orange";
+"theme.error.background_opacity" = "Background opacity must be between 50%% and 100%%";
+"theme.error.border_opacity" = "Border opacity must be between 0%% and 50%%";
+"theme.error.corner_radius" = "Corner radius must be between 8 and 32";
+"theme.error.collapsed_width" = "Collapsed width must be between 200 and 400";
+"theme.error.collapsed_height" = "Collapsed height must be between 30 and 100";
+"theme.error.expanded_width" = "Expanded width must be between 500 and 800";
+"theme.error.expanded_height" = "Expanded height must be between 300 and 1000";
+"theme.error.file_not_found" = "Theme file not found";
+"theme.error.export_failed" = "Failed to export theme";

@@ -231,10 +231,10 @@ struct NotchView: View {
                             Image(systemName: "exclamationmark.triangle")
                                 .font(.system(size: 48))
                                 .foregroundColor(.secondary)
-                            Text("No modules enabled")
+                            Text("notch.empty.title")
                                 .font(.headline)
                                 .foregroundColor(.secondary)
-                            Text("Enable modules in Settings")
+                            Text("notch.empty.message")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }

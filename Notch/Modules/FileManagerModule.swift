@@ -10,7 +10,9 @@ import SwiftData
 
 class FileManagerModule: NotchModule {
     let id = "fileManager"
-    let name = "Files"
+    var name: String {
+        NSLocalizedString("module.filemanager.name", comment: "")
+    }
     let icon = "folder"
     let miniIcon = "doc.fill"
     let side: ModuleSide = .right

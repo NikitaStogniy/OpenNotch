@@ -1,0 +1,195 @@
+/*
+  Localizable.strings (Russian)
+  Notch
+
+  Created for OpenNotch localization
+*/
+
+// MARK: - App
+"app.name" = "Notch";
+
+// MARK: - Common Buttons
+"button.ok" = "OK";
+
+// MARK: - Settings Window
+"settings.window.title" = "Настройки";
+"settings.tab.appearance" = "Внешний вид";
+"settings.tab.modules" = "Модули";
+
+// MARK: - Appearance Settings
+"settings.appearance.title" = "Внешний вид";
+"settings.appearance.description" = "Настройте внешний вид и поведение вашего notch";
+
+// MARK: - Theme Settings
+"settings.theme.title" = "Тема";
+"settings.theme.description" = "Сохраняйте и загружайте настройки внешнего вида как темы";
+"settings.theme.name.label" = "Название темы";
+"settings.theme.name.placeholder" = "Введите название темы";
+"settings.theme.export.button" = "Экспортировать тему";
+"settings.theme.import.button" = "Импортировать тему";
+"settings.theme.export.success" = "Тема успешно экспортирована!";
+"settings.theme.export.message" = "Экспортируйте вашу тему как JSON файл";
+"settings.theme.import.message" = "Выберите JSON файл темы для импорта";
+"settings.theme.export.error" = "Не удалось экспортировать тему: %@";
+"settings.theme.import.error" = "Не удалось импортировать тему: %@";
+"settings.theme.preset.label" = "Готовые темы";
+
+// MARK: - Settings Mode
+"settings.mode.label" = "Режим настроек";
+"settings.mode.simple" = "Простой";
+"settings.mode.advanced" = "Расширенный";
+
+// MARK: - Color Settings
+"settings.colors.title" = "Цвета";
+"settings.colors.description" = "Выберите цветовую схему для фона и акцентных элементов вашего notch";
+"settings.colors.background.label" = "Цвет фона";
+"settings.colors.accent.label" = "Акцентный цвет";
+"settings.colors.black" = "Чёрный";
+"settings.colors.dark_gray" = "Тёмно-серый";
+"settings.colors.dark_blue" = "Тёмно-синий";
+"settings.colors.dark_purple" = "Тёмно-фиолетовый";
+"settings.colors.blue" = "Синий";
+"settings.colors.purple" = "Фиолетовый";
+"settings.colors.pink" = "Розовый";
+"settings.colors.green" = "Зелёный";
+"settings.colors.orange" = "Оранжевый";
+
+// MARK: - Opacity Settings
+"settings.opacity.title" = "Прозрачность";
+"settings.opacity.description" = "Настройте уровни прозрачности для фона и границ notch";
+"settings.opacity.background.label" = "Прозрачность фона";
+"settings.opacity.border.label" = "Прозрачность границы";
+
+// MARK: - Size Settings
+"settings.size.title" = "Размер";
+"settings.size.description" = "Настройте размеры и радиус скругления для свёрнутого и развёрнутого состояний";
+"settings.size.corner_radius.label" = "Радиус скругления";
+"settings.size.dimensions.label" = "Размеры";
+"settings.size.collapsed_width.label" = "Ширина свёрнутого";
+"settings.size.collapsed_height.label" = "Высота свёрнутого";
+"settings.size.expanded_width.label" = "Ширина развёрнутого";
+"settings.size.expanded_height.label" = "Высота развёрнутого";
+"settings.size.spacing.label" = "Отступы";
+"settings.size.collapsed_padding.label" = "Отступ свёрнутого";
+
+// MARK: - Interaction Settings
+"settings.interaction.title" = "Взаимодействие";
+"settings.interaction.description" = "Управляйте реакцией notch на наведение и клики мыши";
+"settings.interaction.auto_expand.label" = "Авто-раскрытие при наведении";
+"settings.interaction.collapse_delay.label" = "Задержка сворачивания";
+
+// MARK: - Animation Settings
+"settings.animations.title" = "Анимация";
+"settings.animations.description" = "Настройте скорость и плавность анимации";
+"settings.animations.duration.label" = "Длительность анимации";
+
+// MARK: - Reset Button
+"settings.reset.button" = "Сбросить к стандартным";
+
+// MARK: - Modules Settings
+"settings.modules.title" = "Модули";
+"settings.modules.description" = "Включайте или отключайте функции и виджеты в вашем notch";
+"settings.modules.available.title" = "Доступные модули";
+"settings.modules.available.description" = "Модульные виджеты с расширенной функциональностью";
+"settings.modules.drag.title" = "Перетащите для упорядочивания";
+"settings.modules.drag.description" = "Используйте предпросмотр notch выше для включения, отключения и упорядочивания модулей";
+"settings.modules.empty.title" = "Нет доступных модулей";
+"settings.modules.empty.description" = "Модули появятся здесь, когда будут доступны";
+"settings.modules.status.enabled" = "Включено";
+"settings.modules.status.disabled" = "Отключено";
+
+// MARK: - Menu Bar
+"menu.notch.hide" = "Скрыть Notch";
+"menu.notch.show" = "Показать Notch";
+"menu.recent_files.title" = "Недавние файлы (%d)";
+"menu.settings" = "Настройки";
+"menu.about" = "О программе";
+"menu.quit" = "Выйти из Notch";
+
+// MARK: - About Dialog
+"about.title" = "О программе Notch";
+"about.subtitle" = "Интерактивный менеджер для MacBook Notch";
+"about.version" = "Версия: %@";
+"about.description" = "Красивый, анимированный интерфейс notch для управления файлами и контроля музыки на вашем MacBook.";
+"about.credits" = "Создано Никитой Стогнием";
+"about.copyright" = "© 2025";
+
+// MARK: - Notch View
+"notch.empty.title" = "Модули не включены";
+"notch.empty.message" = "Включите модули в Настройках";
+
+// MARK: - Preview
+"preview.arrangement.title" = "Расположение модулей";
+"preview.arrangement.instructions" = "Перетаскивайте иконки для упорядочивания или перетащите вниз для отключения";
+"preview.overflow.warning.title" = "Слишком много модулей!";
+"preview.overflow.warning.both" = "Некоторые модули с обеих сторон будут скрыты за физическим notch";
+"preview.overflow.warning.left" = "Некоторые модули слева будут скрыты за физическим notch";
+"preview.overflow.warning.right" = "Некоторые модули справа будут скрыты за физическим notch";
+"preview.disabled.title" = "Отключенные модули";
+"preview.disabled.drop_prompt" = "Перетащите сюда для отключения";
+"preview.physical_notch.label" = "Физический Notch";
+
+// MARK: - Arrangement View
+"arrangement.title" = "Расположение модулей";
+"arrangement.instructions" = "Перетаскивайте модули для переупорядочивания или перемещения между сторонами";
+"arrangement.left_side" = "Левая сторона";
+"arrangement.right_side" = "Правая сторона";
+"arrangement.drop_prompt" = "Перетащите модули сюда";
+
+// MARK: - Module: To-Do List
+"module.todolist.name" = "Список задач";
+"module.todolist.description" = "Управляйте своими ежедневными задачами с автоматической очисткой завершённых элементов";
+"todo.new_task.placeholder" = "Новая задача...";
+"todo.empty.title" = "Нет задач";
+
+// MARK: - Module: Calendar
+"module.calendar.name" = "Календарь";
+"module.calendar.description" = "Просматривайте свои календарные события и встречи";
+"calendar.today.button" = "Сегодня";
+"calendar.permission.title" = "Требуется доступ к календарю";
+"calendar.permission.message" = "Разрешите доступ для просмотра предстоящих событий";
+"calendar.permission.grant" = "Предоставить доступ";
+"calendar.empty.title" = "Нет предстоящих событий";
+"calendar.empty.message" = "У вас всё свободно на следующие 7 дней";
+"calendar.upcoming.title" = "Предстоящие события";
+"calendar.event.all_day" = "Весь день";
+"calendar.event.untitled" = "Событие без названия";
+"calendar.day.empty" = "Нет событий в этот день";
+
+// MARK: - Module: Media Controller
+"module.mediacontroller.name" = "Медиа-контроллер";
+"module.mediacontroller.description" = "Управляйте воспроизведением музыки";
+"media.empty.message" = "Нет воспроизводимых медиа";
+
+// MARK: - Module: File Manager
+"module.filemanager.name" = "Файлы";
+"module.filemanager.description" = "Перетаскивайте файлы для быстрого доступа";
+"filemanager.drop.release" = "Отпустите для добавления";
+"filemanager.drop.prompt" = "Перетащите файлы сюда";
+
+// MARK: - Module: Calculator
+"module.calculator.description" = "Быстрый калькулятор, доступный через горячие клавиши";
+
+// MARK: - Module: Custom
+"module.custom.description" = "Пользовательский модуль";
+
+// MARK: - Preset Themes
+"theme.preset.classic_dark" = "Классическая тёмная";
+"theme.preset.midnight_purple" = "Полуночный фиолетовый";
+"theme.preset.ocean_blue" = "Океанский синий";
+"theme.preset.minimal" = "Минимальная";
+"theme.default.name" = "Моя тема";
+
+// MARK: - Theme Errors
+"theme.error.invalid_json" = "Неверный формат JSON";
+"theme.error.invalid_background" = "Неверный цвет фона. Должен быть один из: black, gray, blue, purple";
+"theme.error.invalid_accent" = "Неверный акцентный цвет. Должен быть один из: blue, purple, pink, green, orange";
+"theme.error.background_opacity" = "Прозрачность фона должна быть между 50%% и 100%%";
+"theme.error.border_opacity" = "Прозрачность границы должна быть между 0%% и 50%%";
+"theme.error.corner_radius" = "Радиус скругления должен быть между 8 и 32";
+"theme.error.collapsed_width" = "Ширина свёрнутого должна быть между 200 и 400";
+"theme.error.collapsed_height" = "Высота свёрнутого должна быть между 30 и 100";
+"theme.error.expanded_width" = "Ширина развёрнутого должна быть между 500 и 800";
+"theme.error.expanded_height" = "Высота развёрнутого должна быть между 300 и 1000";
+"theme.error.file_not_found" = "Файл темы не найден";
+"theme.error.export_failed" = "Не удалось экспортировать тему";

@@ -10,7 +10,9 @@ import SwiftData
 
 class TodoListModule: NotchModule {
     let id = "todolist"
-    let name = "To-Do List"
+    var name: String {
+        NSLocalizedString("module.todolist.name", comment: "")
+    }
     let icon = "checklist"
     let miniIcon = "checklist"
     let side: ModuleSide = .left
@@ -57,12 +59,12 @@ struct TodoExpandedView: View {
     @State private var newTaskText = ""
 
     var body: some View {
-        ModuleExpandedLayout(icon: "checklist", title: "To-Do List") {
+        ModuleExpandedLayout(icon: "checklist", title: NSLocalizedString("module.todolist.name", comment: "")) {
             ScrollView(showsIndicators: true) {
                 VStack(alignment: .leading, spacing: 16) {
                     // Add task input at top
                     HStack(spacing: 8) {
-                        TextField("New task...", text: $newTaskText)
+                        TextField("todo.new_task.placeholder", text: $newTaskText)
                             .textFieldStyle(.plain)
                             .foregroundColor(.white)
                             .onSubmit {
@@ -86,7 +88,7 @@ struct TodoExpandedView: View {
                             Image(systemName: "checkmark.circle")
                                 .font(.system(size: 32))
                                 .foregroundColor(.white.opacity(0.3))
-                            Text("No tasks")
+                            Text("todo.empty.title")
                                 .font(.system(size: 13))
                                 .foregroundColor(.white.opacity(0.5))
                         }

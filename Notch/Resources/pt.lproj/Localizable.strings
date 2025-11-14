@@ -1,0 +1,195 @@
+/*
+  Localizable.strings (Portuguese)
+  Notch
+
+  Created for OpenNotch localization
+*/
+
+// MARK: - App
+"app.name" = "Notch";
+
+// MARK: - Common Buttons
+"button.ok" = "OK";
+
+// MARK: - Settings Window
+"settings.window.title" = "Configurações";
+"settings.tab.appearance" = "Aparência";
+"settings.tab.modules" = "Módulos";
+
+// MARK: - Appearance Settings
+"settings.appearance.title" = "Aparência";
+"settings.appearance.description" = "Personalize a aparência visual e o comportamento do seu notch";
+
+// MARK: - Theme Settings
+"settings.theme.title" = "Tema";
+"settings.theme.description" = "Salve e carregue suas configurações de aparência como temas";
+"settings.theme.name.label" = "Nome do tema";
+"settings.theme.name.placeholder" = "Digite o nome do tema";
+"settings.theme.export.button" = "Exportar tema";
+"settings.theme.import.button" = "Importar tema";
+"settings.theme.export.success" = "Tema exportado com sucesso!";
+"settings.theme.export.message" = "Exporte seu tema como um arquivo JSON";
+"settings.theme.import.message" = "Selecione um arquivo JSON de tema para importar";
+"settings.theme.export.error" = "Falha ao exportar tema: %@";
+"settings.theme.import.error" = "Falha ao importar tema: %@";
+"settings.theme.preset.label" = "Temas predefinidos";
+
+// MARK: - Settings Mode
+"settings.mode.label" = "Modo de configurações";
+"settings.mode.simple" = "Simples";
+"settings.mode.advanced" = "Avançado";
+
+// MARK: - Color Settings
+"settings.colors.title" = "Cores";
+"settings.colors.description" = "Escolha o esquema de cores para o fundo e elementos de destaque do seu notch";
+"settings.colors.background.label" = "Cor de fundo";
+"settings.colors.accent.label" = "Cor de destaque";
+"settings.colors.black" = "Preto";
+"settings.colors.dark_gray" = "Cinza escuro";
+"settings.colors.dark_blue" = "Azul escuro";
+"settings.colors.dark_purple" = "Roxo escuro";
+"settings.colors.blue" = "Azul";
+"settings.colors.purple" = "Roxo";
+"settings.colors.pink" = "Rosa";
+"settings.colors.green" = "Verde";
+"settings.colors.orange" = "Laranja";
+
+// MARK: - Opacity Settings
+"settings.opacity.title" = "Opacidade";
+"settings.opacity.description" = "Ajuste os níveis de transparência para o fundo e borda do notch";
+"settings.opacity.background.label" = "Opacidade do fundo";
+"settings.opacity.border.label" = "Opacidade da borda";
+
+// MARK: - Size Settings
+"settings.size.title" = "Tamanho";
+"settings.size.description" = "Configure as dimensões e raio de canto para os estados recolhido e expandido";
+"settings.size.corner_radius.label" = "Raio de canto";
+"settings.size.dimensions.label" = "Dimensões";
+"settings.size.collapsed_width.label" = "Largura recolhida";
+"settings.size.collapsed_height.label" = "Altura recolhida";
+"settings.size.expanded_width.label" = "Largura expandida";
+"settings.size.expanded_height.label" = "Altura expandida";
+"settings.size.spacing.label" = "Espaçamento";
+"settings.size.collapsed_padding.label" = "Preenchimento recolhido";
+
+// MARK: - Interaction Settings
+"settings.interaction.title" = "Interação";
+"settings.interaction.description" = "Controle como o notch responde ao passar do mouse e cliques";
+"settings.interaction.auto_expand.label" = "Expandir automaticamente ao passar o mouse";
+"settings.interaction.collapse_delay.label" = "Atraso para recolher";
+
+// MARK: - Animation Settings
+"settings.animations.title" = "Animações";
+"settings.animations.description" = "Ajuste a velocidade e suavidade das animações";
+"settings.animations.duration.label" = "Duração da animação";
+
+// MARK: - Reset Button
+"settings.reset.button" = "Redefinir para padrão";
+
+// MARK: - Modules Settings
+"settings.modules.title" = "Módulos";
+"settings.modules.description" = "Ative ou desative recursos e widgets no seu notch";
+"settings.modules.available.title" = "Módulos disponíveis";
+"settings.modules.available.description" = "Widgets modulares com funcionalidade aprimorada";
+"settings.modules.drag.title" = "Arraste para organizar";
+"settings.modules.drag.description" = "Use a visualização do notch acima para ativar, desativar e organizar módulos";
+"settings.modules.empty.title" = "Nenhum módulo disponível";
+"settings.modules.empty.description" = "Os módulos aparecerão aqui quando disponíveis";
+"settings.modules.status.enabled" = "Ativado";
+"settings.modules.status.disabled" = "Desativado";
+
+// MARK: - Menu Bar
+"menu.notch.hide" = "Ocultar Notch";
+"menu.notch.show" = "Mostrar Notch";
+"menu.recent_files.title" = "Arquivos recentes (%d)";
+"menu.settings" = "Configurações";
+"menu.about" = "Sobre";
+"menu.quit" = "Sair do Notch";
+
+// MARK: - About Dialog
+"about.title" = "Sobre o Notch";
+"about.subtitle" = "Gerenciador interativo do MacBook Notch";
+"about.version" = "Versão: %@";
+"about.description" = "Uma interface bonita e animada do notch para gerenciar arquivos e controlar música no seu MacBook.";
+"about.credits" = "Criado por Nikita Stogniy";
+"about.copyright" = "© 2025";
+
+// MARK: - Notch View
+"notch.empty.title" = "Nenhum módulo ativado";
+"notch.empty.message" = "Ative módulos nas Configurações";
+
+// MARK: - Preview
+"preview.arrangement.title" = "Organização de módulos";
+"preview.arrangement.instructions" = "Arraste os ícones para organizar ou arraste para baixo para desativar";
+"preview.overflow.warning.title" = "Muitos módulos!";
+"preview.overflow.warning.both" = "Alguns módulos em ambos os lados ficarão ocultos atrás do notch físico";
+"preview.overflow.warning.left" = "Alguns módulos à esquerda ficarão ocultos atrás do notch físico";
+"preview.overflow.warning.right" = "Alguns módulos à direita ficarão ocultos atrás do notch físico";
+"preview.disabled.title" = "Módulos desativados";
+"preview.disabled.drop_prompt" = "Solte aqui para desativar";
+"preview.physical_notch.label" = "Notch físico";
+
+// MARK: - Arrangement View
+"arrangement.title" = "Organização de módulos";
+"arrangement.instructions" = "Arraste módulos para reordenar ou mover entre lados";
+"arrangement.left_side" = "Lado esquerdo";
+"arrangement.right_side" = "Lado direito";
+"arrangement.drop_prompt" = "Solte os módulos aqui";
+
+// MARK: - Module: To-Do List
+"module.todolist.name" = "Lista de tarefas";
+"module.todolist.description" = "Gerencie suas tarefas diárias com limpeza automática de itens concluídos";
+"todo.new_task.placeholder" = "Nova tarefa...";
+"todo.empty.title" = "Nenhuma tarefa";
+
+// MARK: - Module: Calendar
+"module.calendar.name" = "Calendário";
+"module.calendar.description" = "Visualize seus eventos de calendário e compromissos";
+"calendar.today.button" = "Hoje";
+"calendar.permission.title" = "Acesso ao calendário necessário";
+"calendar.permission.message" = "Permita o acesso para visualizar seus próximos eventos";
+"calendar.permission.grant" = "Conceder acesso";
+"calendar.empty.title" = "Nenhum evento próximo";
+"calendar.empty.message" = "Você está livre nos próximos 7 dias";
+"calendar.upcoming.title" = "Próximos eventos";
+"calendar.event.all_day" = "Dia todo";
+"calendar.event.untitled" = "Evento sem título";
+"calendar.day.empty" = "Nenhum evento neste dia";
+
+// MARK: - Module: Media Controller
+"module.mediacontroller.name" = "Controlador de mídia";
+"module.mediacontroller.description" = "Controle a reprodução de música";
+"media.empty.message" = "Nenhuma mídia reproduzindo";
+
+// MARK: - Module: File Manager
+"module.filemanager.name" = "Arquivos";
+"module.filemanager.description" = "Arraste e solte arquivos para acesso rápido";
+"filemanager.drop.release" = "Solte para adicionar";
+"filemanager.drop.prompt" = "Solte arquivos aqui";
+
+// MARK: - Module: Calculator
+"module.calculator.description" = "Calculadora rápida acessível por atalhos de teclado";
+
+// MARK: - Module: Custom
+"module.custom.description" = "Módulo personalizado";
+
+// MARK: - Preset Themes
+"theme.preset.classic_dark" = "Escuro clássico";
+"theme.preset.midnight_purple" = "Roxo meia-noite";
+"theme.preset.ocean_blue" = "Azul oceano";
+"theme.preset.minimal" = "Minimalista";
+"theme.default.name" = "Meu tema";
+
+// MARK: - Theme Errors
+"theme.error.invalid_json" = "Formato JSON inválido";
+"theme.error.invalid_background" = "Cor de fundo inválida. Deve ser uma das seguintes: black, gray, blue, purple";
+"theme.error.invalid_accent" = "Cor de destaque inválida. Deve ser uma das seguintes: blue, purple, pink, green, orange";
+"theme.error.background_opacity" = "A opacidade do fundo deve estar entre 50%% e 100%%";
+"theme.error.border_opacity" = "A opacidade da borda deve estar entre 0%% e 50%%";
+"theme.error.corner_radius" = "O raio de canto deve estar entre 8 e 32";
+"theme.error.collapsed_width" = "A largura recolhida deve estar entre 200 e 400";
+"theme.error.collapsed_height" = "A altura recolhida deve estar entre 30 e 100";
+"theme.error.expanded_width" = "A largura expandida deve estar entre 500 e 800";
+"theme.error.expanded_height" = "A altura expandida deve estar entre 300 e 1000";
+"theme.error.file_not_found" = "Arquivo de tema não encontrado";
+"theme.error.export_failed" = "Falha ao exportar tema";

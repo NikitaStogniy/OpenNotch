@@ -21,7 +21,7 @@ struct MenuBarView: View {
                 Image(systemName: "music.note.list")
                     .font(.title2)
                     .foregroundColor(.blue)
-                Text("Notch")
+                Text("app.name")
                     .font(.headline)
                 Spacer()
             }
@@ -35,7 +35,7 @@ struct MenuBarView: View {
             }) {
                 HStack {
                     Image(systemName: windowManager.isVisible ? "eye.slash" : "eye")
-                    Text(windowManager.isVisible ? "Hide Notch" : "Show Notch")
+                    Text(windowManager.isVisible ? "menu.notch.hide" : "menu.notch.show")
                     Spacer()
                 }
             }
@@ -48,7 +48,7 @@ struct MenuBarView: View {
             // Recent Files Section
             if !storedFiles.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Recent Files (\(storedFiles.count))")
+                    Text(String(format: NSLocalizedString("menu.recent_files.title", comment: ""), storedFiles.count))
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .padding(.horizontal)
@@ -67,11 +67,11 @@ struct MenuBarView: View {
 
             // Quick Actions
             VStack(spacing: 0) {
-                MenuBarButton(icon: "gearshape", title: "Settings") {
+                MenuBarButton(icon: "gearshape", title: NSLocalizedString("menu.settings", comment: "")) {
                     showSettings()
                 }
 
-                MenuBarButton(icon: "info.circle", title: "About") {
+                MenuBarButton(icon: "info.circle", title: NSLocalizedString("menu.about", comment: "")) {
                     showAbout()
                 }
             }
@@ -85,7 +85,7 @@ struct MenuBarView: View {
                 HStack {
                     Image(systemName: "power")
                         .foregroundColor(.red)
-                    Text("Quit Notch")
+                    Text("menu.quit")
                     Spacer()
                 }
             }
@@ -103,19 +103,25 @@ struct MenuBarView: View {
 
     private func showAbout() {
         let alert = NSAlert()
-        alert.messageText = "About Notch"
+        alert.messageText = NSLocalizedString("about.title", comment: "")
+        let subtitle = NSLocalizedString("about.subtitle", comment: "")
+        let version = String(format: NSLocalizedString("about.version", comment: ""), "1.0.0")
+        let description = NSLocalizedString("about.description", comment: "")
+        let credits = NSLocalizedString("about.credits", comment: "")
+        let copyright = NSLocalizedString("about.copyright", comment: "")
+
         alert.informativeText = """
-        Notch - Interactive MacBook Notch Manager
+        \(subtitle)
 
-        Version: 1.0.0
+        \(version)
 
-        A beautiful, animated notch interface for managing files and controlling music on your MacBook.
+        \(description)
 
-        Created by Nikita Stogniy
-        © 2025
+        \(credits)
+        \(copyright)
         """
         alert.alertStyle = .informational
-        alert.addButton(withTitle: "OK")
+        alert.addButton(withTitle: NSLocalizedString("button.ok", comment: ""))
         alert.runModal()
     }
 }

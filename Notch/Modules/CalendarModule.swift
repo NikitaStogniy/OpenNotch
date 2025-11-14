@@ -24,7 +24,9 @@ struct EventSection: Identifiable {
 
 class CalendarModule: NotchModule, ObservableObject {
     let id = "calendar"
-    let name = "Calendar"
+    var name: String {
+        NSLocalizedString("module.calendar.name", comment: "")
+    }
     let icon = "calendar"
     let miniIcon = "calendar"
     let side: ModuleSide = .left
@@ -331,7 +333,7 @@ struct CalendarExpandedView: View {
                 .buttonStyle(.plain)
 
                 Button(action: navigateToToday) {
-                    Text("Today")
+                    Text(NSLocalizedString("calendar.today.button", comment: ""))
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(.white.opacity(0.6))
                 }
@@ -404,11 +406,11 @@ struct CalendarExpandedView: View {
                                     .font(.system(size: 32))
                                     .foregroundColor(.secondary)
 
-                                Text("Calendar Access Required")
+                                Text(NSLocalizedString("calendar.permission.title", comment: ""))
                                     .font(.headline)
                                     .foregroundColor(.white)
 
-                                Text("Allow access to view your upcoming events")
+                                Text(NSLocalizedString("calendar.permission.message", comment: ""))
                                     .font(.caption)
                                     .foregroundColor(.white.opacity(0.6))
                                     .multilineTextAlignment(.center)
@@ -417,7 +419,7 @@ struct CalendarExpandedView: View {
                                     print("🔘 Grant Access button pressed")
                                     onRequestAccess()
                                 }) {
-                                    Text("Grant Access")
+                                    Text(NSLocalizedString("calendar.permission.grant", comment: ""))
                                         .font(.system(size: 12, weight: .medium))
                                         .foregroundColor(.white)
                                         .padding(.horizontal, 16)
@@ -437,11 +439,11 @@ struct CalendarExpandedView: View {
                                     .font(.system(size: 32))
                                     .foregroundColor(.green.opacity(0.6))
 
-                                Text("No upcoming events")
+                                Text(NSLocalizedString("calendar.empty.title", comment: ""))
                                     .font(.headline)
                                     .foregroundColor(.white.opacity(0.8))
 
-                                Text("You're all clear for the next 7 days")
+                                Text(NSLocalizedString("calendar.empty.message", comment: ""))
                                     .font(.caption)
                                     .foregroundColor(.white.opacity(0.5))
                             }
@@ -449,7 +451,7 @@ struct CalendarExpandedView: View {
                             .padding(.vertical, 20)
                         } else if module.viewMode != .day {
                             VStack(alignment: .leading, spacing: 12) {
-                                Text("Upcoming Events")
+                                Text(NSLocalizedString("calendar.upcoming.title", comment: ""))
                                     .font(.system(size: 12, weight: .semibold))
                                     .foregroundColor(.white.opacity(0.6))
                                     .textCase(.uppercase)
@@ -641,7 +643,7 @@ struct EventRow: View {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         if event.isAllDay {
-            return "Весь день"
+            return NSLocalizedString("calendar.event.all_day", comment: "")
         }
         return formatter.string(from: event.startDate)
     }
@@ -845,7 +847,7 @@ struct CalendarDayView: View {
                     Image(systemName: "calendar")
                         .font(.system(size: 32))
                         .foregroundColor(.white.opacity(0.3))
-                    Text("No events on this day")
+                    Text(NSLocalizedString("calendar.day.empty", comment: ""))
                         .font(.system(size: 12))
                         .foregroundColor(.white.opacity(0.5))
                 }

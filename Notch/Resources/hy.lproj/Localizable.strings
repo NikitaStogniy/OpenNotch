@@ -1,0 +1,195 @@
+/*
+  Localizable.strings (Armenian)
+  Notch
+
+  Created for OpenNotch localization
+*/
+
+// MARK: - App
+"app.name" = "Notch";
+
+// MARK: - Common Buttons
+"button.ok" = "Լավ";
+
+// MARK: - Settings Window
+"settings.window.title" = "Կարգավորումներ";
+"settings.tab.appearance" = "Տեսք";
+"settings.tab.modules" = "Մոդուլներ";
+
+// MARK: - Appearance Settings
+"settings.appearance.title" = "Տեսք";
+"settings.appearance.description" = "Հարմարեցրեք ձեր notch-ի տեսողական տեսքն ու վարքագիծը";
+
+// MARK: - Theme Settings
+"settings.theme.title" = "Թեմա";
+"settings.theme.description" = "Պահպանեք և բեռնեք ձեր տեսքի կարգավորումները որպես թեմաներ";
+"settings.theme.name.label" = "Թեմայի անուն";
+"settings.theme.name.placeholder" = "Մուտքագրեք թեմայի անունը";
+"settings.theme.export.button" = "Արտահանել թեման";
+"settings.theme.import.button" = "Ներմուծել թեման";
+"settings.theme.export.success" = "Թեման հաջողությամբ արտահանվեց։";
+"settings.theme.export.message" = "Արտահանեք ձեր թեման որպես JSON ֆայլ";
+"settings.theme.import.message" = "Ընտրեք թեմայի JSON ֆայլ ներմուծման համար";
+"settings.theme.export.error" = "Թեմայի արտահանումը ձախողվեց․ %@";
+"settings.theme.import.error" = "Թեմայի ներմուծումը ձախողվեց․ %@";
+"settings.theme.preset.label" = "Նախադասված թեմաներ";
+
+// MARK: - Settings Mode
+"settings.mode.label" = "Կարգավորումների ռեժիմ";
+"settings.mode.simple" = "Պարզ";
+"settings.mode.advanced" = "Ընդլայնված";
+
+// MARK: - Color Settings
+"settings.colors.title" = "Գույներ";
+"settings.colors.description" = "Ընտրեք գունային սխեման ձեր notch-ի հետնամասի և շեշտադրված տարրերի համար";
+"settings.colors.background.label" = "Հետնամասի գույն";
+"settings.colors.accent.label" = "Շեշտադրման գույն";
+"settings.colors.black" = "Սև";
+"settings.colors.dark_gray" = "Մուգ մոխրագույն";
+"settings.colors.dark_blue" = "Մուգ կապույտ";
+"settings.colors.dark_purple" = "Մուգ մանուշակագույն";
+"settings.colors.blue" = "Կապույտ";
+"settings.colors.purple" = "Մանուշակագույն";
+"settings.colors.pink" = "Վարդագույն";
+"settings.colors.green" = "Կանաչ";
+"settings.colors.orange" = "Նարնջագույն";
+
+// MARK: - Opacity Settings
+"settings.opacity.title" = "Անթափանցություն";
+"settings.opacity.description" = "Կարգավորեք թափանցիկության մակարդակները notch-ի հետնամասի և եզրագծի համար";
+"settings.opacity.background.label" = "Հետնամասի անթափանցություն";
+"settings.opacity.border.label" = "Եզրագծի անթափանցություն";
+
+// MARK: - Size Settings
+"settings.size.title" = "Չափ";
+"settings.size.description" = "Կարգավորեք չափերն ու անկյան շառավիղը ծալված և բացված վիճակների համար";
+"settings.size.corner_radius.label" = "Անկյան շառավիղ";
+"settings.size.dimensions.label" = "Չափեր";
+"settings.size.collapsed_width.label" = "Ծալված լայնություն";
+"settings.size.collapsed_height.label" = "Ծալված բարձրություն";
+"settings.size.expanded_width.label" = "Բացված լայնություն";
+"settings.size.expanded_height.label" = "Բացված բարձրություն";
+"settings.size.spacing.label" = "Բացատ";
+"settings.size.collapsed_padding.label" = "Ծալված լրացում";
+
+// MARK: - Interaction Settings
+"settings.interaction.title" = "Փոխգործակցություն";
+"settings.interaction.description" = "Վերահսկեք, թե ինչպես է notch-ը արձագանքում մկնիկի անցման և սեղմումների";
+"settings.interaction.auto_expand.label" = "Ավտոմատ բացում անցման ժամանակ";
+"settings.interaction.collapse_delay.label" = "Ծալման հետաձգում";
+
+// MARK: - Animation Settings
+"settings.animations.title" = "Անիմացիաներ";
+"settings.animations.description" = "Կարգավորեք անիմացիայի արագությունն ու հարթությունը";
+"settings.animations.duration.label" = "Անիմացիայի տևողություն";
+
+// MARK: - Reset Button
+"settings.reset.button" = "Վերականգնել սկզբնական կարգավորումներ";
+
+// MARK: - Modules Settings
+"settings.modules.title" = "Մոդուլներ";
+"settings.modules.description" = "Միացրեք կամ անջատեք ֆունկցիաներն ու վիդջեթները ձեր notch-ում";
+"settings.modules.available.title" = "Հասանելի մոդուլներ";
+"settings.modules.available.description" = "Մոդուլային վիդջեթներ ընդլայնված ֆունկցիոնալությամբ";
+"settings.modules.drag.title" = "Քաշեք դասավորելու համար";
+"settings.modules.drag.description" = "Օգտագործեք notch-ի նախադիտումը վերևում՝ մոդուլները միացնելու, անջատելու և դասավորելու համար";
+"settings.modules.empty.title" = "Հասանելի մոդուլներ չկան";
+"settings.modules.empty.description" = "Մոդուլները կհայտնվեն այստեղ, երբ հասանելի լինեն";
+"settings.modules.status.enabled" = "Միացված";
+"settings.modules.status.disabled" = "Անջատված";
+
+// MARK: - Menu Bar
+"menu.notch.hide" = "Թաքցնել Notch-ը";
+"menu.notch.show" = "Ցույց տալ Notch-ը";
+"menu.recent_files.title" = "Վերջին ֆայլեր (%d)";
+"menu.settings" = "Կարգավորումներ";
+"menu.about" = "Ծրագրի մասին";
+"menu.quit" = "Դուրս գալ Notch-ից";
+
+// MARK: - About Dialog
+"about.title" = "Notch-ի մասին";
+"about.subtitle" = "Ինտերակտիվ MacBook Notch կառավարիչ";
+"about.version" = "Տարբերակ՝ %@";
+"about.description" = "Գեղեցիկ, անիմացված notch ինտերֆեյս՝ ֆայլեր կառավարելու և երաժշտություն վերահսկելու համար ձեր MacBook-ում։";
+"about.credits" = "Ստեղծել է Նիկիտա Ստոգնին";
+"about.copyright" = "© 2025";
+
+// MARK: - Notch View
+"notch.empty.title" = "Մոդուլներ միացված չեն";
+"notch.empty.message" = "Միացրեք մոդուլները Կարգավորումներում";
+
+// MARK: - Preview
+"preview.arrangement.title" = "Մոդուլների դասավորություն";
+"preview.arrangement.instructions" = "Քաշեք պատկերակները դասավորելու համար կամ քաշեք վար անջատելու համար";
+"preview.overflow.warning.title" = "Չափից շատ մոդուլներ։";
+"preview.overflow.warning.both" = "Մոդուլներից ոմանք երկու կողմերում կթաքնվեն ֆիզիկական notch-ի հետևում";
+"preview.overflow.warning.left" = "Ձախ կողմի մոդուլներից ոմանք կթաքնվեն ֆիզիկական notch-ի հետևում";
+"preview.overflow.warning.right" = "Աջ կողմի մոդուլներից ոմանք կթաքնվեն ֆիզիկական notch-ի հետևում";
+"preview.disabled.title" = "Անջատված մոդուլներ";
+"preview.disabled.drop_prompt" = "Գցեք այստեղ անջատելու համար";
+"preview.physical_notch.label" = "Ֆիզիկական Notch";
+
+// MARK: - Arrangement View
+"arrangement.title" = "Մոդուլների դասավորություն";
+"arrangement.instructions" = "Քաշեք մոդուլները վերադասավորելու կամ կողմերի միջև տեղափոխելու համար";
+"arrangement.left_side" = "Ձախ կողմ";
+"arrangement.right_side" = "Աջ կողմ";
+"arrangement.drop_prompt" = "Գցեք մոդուլները այստեղ";
+
+// MARK: - Module: To-Do List
+"module.todolist.name" = "Առաջադրանքների ցանկ";
+"module.todolist.description" = "Կառավարեք ձեր օրավա առաջադրանքները՝ ավտոմատ մաքրելով ավարտված տարրերը";
+"todo.new_task.placeholder" = "Նոր առաջադրանք...";
+"todo.empty.title" = "Առաջադրանքներ չկան";
+
+// MARK: - Module: Calendar
+"module.calendar.name" = "Օրացույց";
+"module.calendar.description" = "Դիտեք ձեր օրացույցի իրադարձություններն ու հանդիպումները";
+"calendar.today.button" = "Այսօր";
+"calendar.permission.title" = "Անհրաժեշտ է օրացույցի հասանելիություն";
+"calendar.permission.message" = "Թույլատրեք մուտքը՝ ձեր առաջիկա իրադարձությունները դիտելու համար";
+"calendar.permission.grant" = "Տրամադրել մուտք";
+"calendar.empty.title" = "Առաջիկա իրադարձություններ չկան";
+"calendar.empty.message" = "Դուք ազատ եք հաջորդ 7 օրվա ընթացքում";
+"calendar.upcoming.title" = "Առաջիկա իրադարձություններ";
+"calendar.event.all_day" = "Ամբողջ օրը";
+"calendar.event.untitled" = "Անանուն իրադարձություն";
+"calendar.day.empty" = "Այս օրը իրադարձություններ չկան";
+
+// MARK: - Module: Media Controller
+"module.mediacontroller.name" = "Մեդիա վերահսկիչ";
+"module.mediacontroller.description" = "Վերահսկեք ձեր երաժշտության նվագարկումը";
+"media.empty.message" = "Մեդիա չի նվագարկվում";
+
+// MARK: - Module: File Manager
+"module.filemanager.name" = "Ֆայլեր";
+"module.filemanager.description" = "Քաշեք և գցեք ֆայլեր արագ մուտքի համար";
+"filemanager.drop.release" = "Արձակեք ավելացնելու համար";
+"filemanager.drop.prompt" = "Գցեք ֆայլերը այստեղ";
+
+// MARK: - Module: Calculator
+"module.calculator.description" = "Արագ հաշվիչ՝ հասանելի ստեղնաշարի կարճատների միջոցով";
+
+// MARK: - Module: Custom
+"module.custom.description" = "Հատուկ մոդուլ";
+
+// MARK: - Preset Themes
+"theme.preset.classic_dark" = "Դասական մուգ";
+"theme.preset.midnight_purple" = "Կեսգիշերային մանուշակագույն";
+"theme.preset.ocean_blue" = "Օվկիանոսային կապույտ";
+"theme.preset.minimal" = "Մինիմալիստական";
+"theme.default.name" = "Իմ թեման";
+
+// MARK: - Theme Errors
+"theme.error.invalid_json" = "Անվավեր JSON ձևաչափ";
+"theme.error.invalid_background" = "Անվավեր հետնամասի գույն։ Պետք է լինի հետևյալներից մեկը՝ black, gray, blue, purple";
+"theme.error.invalid_accent" = "Անվավեր շեշտադրման գույն։ Պետք է լինի հետևյալներից մեկը՝ blue, purple, pink, green, orange";
+"theme.error.background_opacity" = "Հետնամասի անթափանցությունը պետք է լինի 50%%-ից 100%%-ի միջև";
+"theme.error.border_opacity" = "Եզրագծի անթափանցությունը պետք է լինի 0%%-ից 50%%-ի միջև";
+"theme.error.corner_radius" = "Անկյան շառավիղը պետք է լինի 8-ից 32-ի միջև";
+"theme.error.collapsed_width" = "Ծալված լայնությունը պետք է լինի 200-ից 400-ի միջև";
+"theme.error.collapsed_height" = "Ծալված բարձրությունը պետք է լինի 30-ից 100-ի միջև";
+"theme.error.expanded_width" = "Բացված լայնությունը պետք է լինի 500-ից 800-ի միջև";
+"theme.error.expanded_height" = "Բացված բարձրությունը պետք է լինի 300-ից 1000-ի միջև";
+"theme.error.file_not_found" = "Թեմայի ֆայլը չի գտնվել";
+"theme.error.export_failed" = "Թեմայի արտահանումը ձախողվեց";

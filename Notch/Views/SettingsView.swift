@@ -12,11 +12,23 @@ struct SettingsView: View {
     @StateObject private var settings = SettingsManager.shared
     @State private var selectedTab: SettingsTab = .appearance
 
-    enum SettingsTab: String, CaseIterable, Identifiable {
-        case appearance = "Appearance"
-        case modules = "Modules"
+    enum SettingsTab: CaseIterable, Identifiable {
+        case appearance
+        case modules
 
-        var id: String { rawValue }
+        var id: String {
+            switch self {
+            case .appearance: return "appearance"
+            case .modules: return "modules"
+            }
+        }
+
+        var title: LocalizedStringKey {
+            switch self {
+            case .appearance: return "settings.tab.appearance"
+            case .modules: return "settings.tab.modules"
+            }
+        }
 
         var icon: String {
             switch self {
@@ -30,7 +42,7 @@ struct SettingsView: View {
         NavigationSplitView {
             // Sidebar
             List(SettingsTab.allCases, selection: $selectedTab) { tab in
-                Label(tab.rawValue, systemImage: tab.icon)
+                Label(tab.title, systemImage: tab.icon)
                     .tag(tab)
             }
             .navigationSplitViewColumnWidth(min: 150, ideal: 180, max: 200)
@@ -49,7 +61,7 @@ struct SettingsView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         }
-        .navigationTitle("Settings")
+        .navigationTitle("settings.window.title")
         .frame(minWidth: 650, minHeight: 450)
     }
 }
@@ -68,10 +80,10 @@ struct AppearanceSettingsView: View {
         VStack(alignment: .leading, spacing: 24) {
             // Tab Description
             VStack(alignment: .leading, spacing: 4) {
-                Text("Appearance")
+                Text("settings.appearance.title")
                     .font(.title2)
                     .fontWeight(.bold)
-                Text("Customize the visual appearance and behavior of your notch")
+                Text("settings.appearance.description")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
@@ -79,17 +91,17 @@ struct AppearanceSettingsView: View {
 
             // Theme Management Section
             SettingsSection(
-                title: "Theme",
+                title: "settings.theme.title",
                 icon: "paintbrush.pointed.fill",
-                description: "Save and load your appearance settings as themes"
+                description: "settings.theme.description"
             ) {
                 VStack(alignment: .leading, spacing: 16) {
                     // Theme Name
                     HStack {
-                        Text("Theme Name")
+                        Text("settings.theme.name.label")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
-                        TextField("Enter theme name", text: $themeName)
+                        TextField("settings.theme.name.placeholder", text: $themeName)
                             .textFieldStyle(.roundedBorder)
                     }
 
@@ -100,7 +112,7 @@ struct AppearanceSettingsView: View {
                         Button(action: exportTheme) {
                             HStack {
                                 Image(systemName: "square.and.arrow.up")
-                                Text("Export Theme")
+                                Text("settings.theme.export.button")
                             }
                         }
                         .buttonStyle(.bordered)
@@ -108,7 +120,7 @@ struct AppearanceSettingsView: View {
                         Button(action: importTheme) {
                             HStack {
                                 Image(systemName: "square.and.arrow.down")
-                                Text("Import Theme")
+                                Text("settings.theme.import.button")
                             }
                         }
                         .buttonStyle(.bordered)
@@ -119,7 +131,7 @@ struct AppearanceSettingsView: View {
                         HStack {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(.green)
-                            Text("Theme exported successfully!")
+                            Text("settings.theme.export.success")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -138,7 +150,7 @@ struct AppearanceSettingsView: View {
                     Divider()
 
                     // Preset Themes
-                    Text("Preset Themes")
+                    Text("settings.theme.preset.label")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .fontWeight(.semibold)
@@ -178,12 +190,12 @@ struct AppearanceSettingsView: View {
 
             // Simple/Advanced Mode Toggle
             HStack {
-                Text("Settings Mode")
+                Text("settings.mode.label")
                     .font(.headline)
                 Spacer()
                 Picker("", selection: $settings.isAdvancedMode) {
-                    Text("Simple").tag(false)
-                    Text("Advanced").tag(true)
+                    Text("settings.mode.simple").tag(false)
+                    Text("settings.mode.advanced").tag(true)
                 }
                 .pickerStyle(.segmented)
                 .frame(width: 200)
@@ -193,14 +205,14 @@ struct AppearanceSettingsView: View {
             .cornerRadius(8)
 
             SettingsSection(
-                title: "Colors",
+                title: "settings.colors.title",
                 icon: "paintpalette.fill",
-                description: "Choose the color scheme for your notch background and accent elements"
+                description: "settings.colors.description"
             ) {
                 VStack(alignment: .leading, spacing: 16) {
                     // Background Color
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Background Color")
+                        Text("settings.colors.background.label")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
 
@@ -209,28 +221,28 @@ struct AppearanceSettingsView: View {
                                 Circle()
                                     .fill(.black)
                                     .frame(width: 16, height: 16)
-                                Text("Black")
+                                Text("settings.colors.black")
                             }.tag("black")
 
                             HStack {
                                 Circle()
                                     .fill(Color(white: 0.15))
                                     .frame(width: 16, height: 16)
-                                Text("Dark Gray")
+                                Text("settings.colors.dark_gray")
                             }.tag("gray")
 
                             HStack {
                                 Circle()
                                     .fill(Color(red: 0.05, green: 0.05, blue: 0.15))
                                     .frame(width: 16, height: 16)
-                                Text("Dark Blue")
+                                Text("settings.colors.dark_blue")
                             }.tag("blue")
 
                             HStack {
                                 Circle()
                                     .fill(Color(red: 0.1, green: 0.05, blue: 0.15))
                                     .frame(width: 16, height: 16)
-                                Text("Dark Purple")
+                                Text("settings.colors.dark_purple")
                             }.tag("purple")
                         }
                         .pickerStyle(.radioGroup)
@@ -240,7 +252,7 @@ struct AppearanceSettingsView: View {
 
                     // Accent Color
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Accent Color")
+                        Text("settings.colors.accent.label")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
 
@@ -249,35 +261,35 @@ struct AppearanceSettingsView: View {
                                 Circle()
                                     .fill(.blue)
                                     .frame(width: 16, height: 16)
-                                Text("Blue")
+                                Text("settings.colors.blue")
                             }.tag("blue")
 
                             HStack {
                                 Circle()
                                     .fill(.purple)
                                     .frame(width: 16, height: 16)
-                                Text("Purple")
+                                Text("settings.colors.purple")
                             }.tag("purple")
 
                             HStack {
                                 Circle()
                                     .fill(.pink)
                                     .frame(width: 16, height: 16)
-                                Text("Pink")
+                                Text("settings.colors.pink")
                             }.tag("pink")
 
                             HStack {
                                 Circle()
                                     .fill(.green)
                                     .frame(width: 16, height: 16)
-                                Text("Green")
+                                Text("settings.colors.green")
                             }.tag("green")
 
                             HStack {
                                 Circle()
                                     .fill(.orange)
                                     .frame(width: 16, height: 16)
-                                Text("Orange")
+                                Text("settings.colors.orange")
                             }.tag("orange")
                         }
                         .pickerStyle(.radioGroup)
@@ -286,15 +298,15 @@ struct AppearanceSettingsView: View {
             }
 
             SettingsSection(
-                title: "Opacity",
+                title: "settings.opacity.title",
                 icon: "circle.lefthalf.filled",
-                description: "Adjust transparency levels for the notch background and border"
+                description: "settings.opacity.description"
             ) {
                 VStack(alignment: .leading, spacing: 16) {
                     if settings.isAdvancedMode {
                         // Advanced Mode: Text Input Fields
                         NumberInputField(
-                            title: "Background Opacity",
+                            title: "settings.opacity.background.label",
                             value: Binding(
                                 get: { settings.notchOpacity * 100 },
                                 set: { settings.notchOpacity = $0 / 100 }
@@ -308,7 +320,7 @@ struct AppearanceSettingsView: View {
                         Divider()
 
                         NumberInputField(
-                            title: "Border Opacity",
+                            title: "settings.opacity.border.label",
                             value: Binding(
                                 get: { settings.notchBorderOpacity * 100 },
                                 set: { settings.notchBorderOpacity = $0 / 100 }
@@ -322,7 +334,7 @@ struct AppearanceSettingsView: View {
                         // Simple Mode: Sliders with larger steps
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Text("Background Opacity")
+                                Text("settings.opacity.background.label")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                 Spacer()
@@ -339,7 +351,7 @@ struct AppearanceSettingsView: View {
 
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Text("Border Opacity")
+                                Text("settings.opacity.border.label")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                 Spacer()
@@ -356,15 +368,15 @@ struct AppearanceSettingsView: View {
             }
 
             SettingsSection(
-                title: "Size",
+                title: "settings.size.title",
                 icon: "arrow.up.left.and.arrow.down.right",
-                description: "Configure dimensions and corner radius for collapsed and expanded states"
+                description: "settings.size.description"
             ) {
                 VStack(alignment: .leading, spacing: 16) {
                     if settings.isAdvancedMode {
                         // Advanced Mode: Text Input Fields for all settings
                         NumberInputField(
-                            title: "Corner Radius",
+                            title: "settings.size.corner_radius.label",
                             value: $settings.cornerRadius,
                             unit: "pt",
                             min: 8,
@@ -374,13 +386,13 @@ struct AppearanceSettingsView: View {
 
                         Divider()
 
-                        Text("Dimensions")
+                        Text("settings.size.dimensions.label")
                             .font(.caption)
                             .foregroundColor(.secondary)
                             .fontWeight(.semibold)
 
                         NumberInputField(
-                            title: "Collapsed Width",
+                            title: "settings.size.collapsed_width.label",
                             value: $settings.collapsedWidth,
                             unit: "pt",
                             min: 200,
@@ -389,7 +401,7 @@ struct AppearanceSettingsView: View {
                         )
 
                         NumberInputField(
-                            title: "Collapsed Height",
+                            title: "settings.size.collapsed_height.label",
                             value: $settings.collapsedHeight,
                             unit: "pt",
                             min: 20,
@@ -398,7 +410,7 @@ struct AppearanceSettingsView: View {
                         )
 
                         NumberInputField(
-                            title: "Expanded Width",
+                            title: "settings.size.expanded_width.label",
                             value: $settings.expandedWidth,
                             unit: "pt",
                             min: 500,
@@ -407,7 +419,7 @@ struct AppearanceSettingsView: View {
                         )
 
                         NumberInputField(
-                            title: "Expanded Height",
+                            title: "settings.size.expanded_height.label",
                             value: $settings.expandedHeight,
                             unit: "pt",
                             min: 300,
@@ -417,13 +429,13 @@ struct AppearanceSettingsView: View {
 
                         Divider()
 
-                        Text("Spacing")
+                        Text("settings.size.spacing.label")
                             .font(.caption)
                             .foregroundColor(.secondary)
                             .fontWeight(.semibold)
 
                         NumberInputField(
-                            title: "Collapsed Padding",
+                            title: "settings.size.collapsed_padding.label",
                             value: $settings.collapsedPadding,
                             unit: "pt",
                             min: 4,
@@ -434,7 +446,7 @@ struct AppearanceSettingsView: View {
                         // Simple Mode: Only corner radius with larger steps
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Text("Corner Radius")
+                                Text("settings.size.corner_radius.label")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                 Spacer()
@@ -451,18 +463,18 @@ struct AppearanceSettingsView: View {
             }
 
             SettingsSection(
-                title: "Interaction",
+                title: "settings.interaction.title",
                 icon: "hand.tap.fill",
-                description: "Control how the notch responds to mouse hover and clicks"
+                description: "settings.interaction.description"
             ) {
                 VStack(alignment: .leading, spacing: 16) {
-                    Toggle("Auto-expand on hover", isOn: $settings.autoExpandOnHover)
+                    Toggle("settings.interaction.auto_expand.label", isOn: $settings.autoExpandOnHover)
                         .toggleStyle(.switch)
 
                     if settings.autoExpandOnHover {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
-                                Text("Collapse Delay")
+                                Text("settings.interaction.collapse_delay.label")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                 Spacer()
@@ -480,14 +492,14 @@ struct AppearanceSettingsView: View {
             }
 
             SettingsSection(
-                title: "Animations",
+                title: "settings.animations.title",
                 icon: "wand.and.stars",
-                description: "Adjust animation speed and smoothness"
+                description: "settings.animations.description"
             ) {
                 VStack(alignment: .leading, spacing: 16) {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Text("Animation Duration")
+                            Text("settings.animations.duration.label")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                             Spacer()
@@ -512,7 +524,7 @@ struct AppearanceSettingsView: View {
                         settings.resetToDefaults()
                     }
                 }) {
-                    Text("Reset to Defaults")
+                    Text("settings.reset.button")
                 }
             }
         }
@@ -528,7 +540,7 @@ struct AppearanceSettingsView: View {
             let savePanel = NSSavePanel()
             savePanel.allowedContentTypes = [.json]
             savePanel.nameFieldStringValue = "\(theme.name.replacingOccurrences(of: " ", with: "_")).json"
-            savePanel.message = "Export your theme as a JSON file"
+            savePanel.message = NSLocalizedString("settings.theme.export.message", comment: "Export theme dialog message")
 
             savePanel.begin { response in
                 if response == .OK, let url = savePanel.url {
@@ -544,7 +556,7 @@ struct AppearanceSettingsView: View {
                     } catch {
                         showImportError = true
                         showExportSuccess = false
-                        errorMessage = "Failed to export theme: \(error.localizedDescription)"
+                        errorMessage = String(format: NSLocalizedString("settings.theme.export.error", comment: ""), error.localizedDescription)
                     }
                 }
             }
@@ -556,7 +568,7 @@ struct AppearanceSettingsView: View {
         let openPanel = NSOpenPanel()
         openPanel.allowedContentTypes = [.json]
         openPanel.allowsMultipleSelection = false
-        openPanel.message = "Select a theme JSON file to import"
+        openPanel.message = NSLocalizedString("settings.theme.import.message", comment: "Import theme dialog message")
 
         openPanel.begin { response in
             if response == .OK, let url = openPanel.url {
@@ -575,7 +587,7 @@ struct AppearanceSettingsView: View {
                 } catch {
                     showImportError = true
                     showExportSuccess = false
-                    errorMessage = "Failed to import theme: \(error.localizedDescription)"
+                    errorMessage = String(format: NSLocalizedString("settings.theme.import.error", comment: ""), error.localizedDescription)
 
                     // Hide error message after 5 seconds
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
@@ -616,10 +628,10 @@ struct ModulesSettingsView: View {
         VStack(alignment: .leading, spacing: 24) {
             // Tab Description
             VStack(alignment: .leading, spacing: 4) {
-                Text("Modules")
+                Text("settings.modules.title")
                     .font(.title2)
                     .fontWeight(.bold)
-                Text("Enable or disable features and widgets in your notch")
+                Text("settings.modules.description")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
@@ -634,9 +646,9 @@ struct ModulesSettingsView: View {
 
             // Module System
             SettingsSection(
-                title: "Available Modules",
+                title: "settings.modules.available.title",
                 icon: "sparkles",
-                description: "Modular widgets with enhanced functionality"
+                description: "settings.modules.available.description"
             ) {
                 VStack(alignment: .leading, spacing: 16) {
                     // Drag & Drop hint
@@ -646,10 +658,10 @@ struct ModulesSettingsView: View {
                             .foregroundColor(.blue)
 
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Drag to arrange")
+                            Text("settings.modules.drag.title")
                                 .font(.subheadline)
                                 .fontWeight(.medium)
-                            Text("Use the notch preview above to enable, disable, and arrange modules")
+                            Text("settings.modules.drag.description")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -670,9 +682,9 @@ struct ModulesSettingsView: View {
                                     .foregroundColor(.accentColor)
 
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("No modules available")
+                                    Text("settings.modules.empty.title")
                                         .font(.headline)
-                                    Text("Modules will appear here when available")
+                                    Text("settings.modules.empty.description")
                                         .font(.caption)
                                         .foregroundColor(.secondary)
                                 }
@@ -719,7 +731,7 @@ struct DynamicModuleToggle: View {
                         .font(.headline)
 
                     // Status badge
-                    Text(module.isEnabled ? "Enabled" : "Disabled")
+                    Text(module.isEnabled ? "settings.modules.status.enabled" : "settings.modules.status.disabled")
                         .font(.caption2)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
@@ -730,7 +742,7 @@ struct DynamicModuleToggle: View {
                         .foregroundColor(module.isEnabled ? .accentColor : .secondary)
                 }
 
-                Text(getModuleDescription())
+                Text(getModuleDescriptionKey())
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -739,33 +751,33 @@ struct DynamicModuleToggle: View {
         }
     }
 
-    private func getModuleDescription() -> String {
-        // Return specific descriptions for known modules
+    private func getModuleDescriptionKey() -> LocalizedStringKey {
+        // Return specific description keys for known modules
         switch module.id {
         case "calendar":
-            return "View your calendar events and appointments"
+            return "module.calendar.description"
         case "todolist":
-            return "Manage your daily tasks with automatic cleanup of completed items"
+            return "module.todolist.description"
         case "mediacontroller":
-            return "Control your music playback"
+            return "module.mediacontroller.description"
         case "calculator":
-            return "Quick calculator accessible via keyboard shortcuts"
+            return "module.calculator.description"
         case "fileManager":
-            return "Drag and drop files for quick access"
+            return "module.filemanager.description"
         default:
-            return "Custom module"
+            return "module.custom.description"
         }
     }
 }
 
 // MARK: - Helper Views
 struct SettingsSection<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     let icon: String
-    let description: String?
+    let description: LocalizedStringKey?
     @ViewBuilder let content: Content
 
-    init(title: String, icon: String, description: String? = nil, @ViewBuilder content: () -> Content) {
+    init(title: LocalizedStringKey, icon: String, description: LocalizedStringKey? = nil, @ViewBuilder content: () -> Content) {
         self.title = title
         self.icon = icon
         self.description = description
@@ -830,7 +842,7 @@ struct ModuleToggle: View {
 
 // MARK: - Number Input Field
 struct NumberInputField: View {
-    let title: String
+    let title: LocalizedStringKey
     @Binding var value: Double
     let unit: String
     let min: Double
@@ -840,7 +852,7 @@ struct NumberInputField: View {
     @State private var textValue: String = ""
     @FocusState private var isFocused: Bool
 
-    init(title: String, value: Binding<Double>, unit: String, min: Double, max: Double, step: Double = 1) {
+    init(title: LocalizedStringKey, value: Binding<Double>, unit: String, min: Double, max: Double, step: Double = 1) {
         self.title = title
         self._value = value
         self.unit = unit
