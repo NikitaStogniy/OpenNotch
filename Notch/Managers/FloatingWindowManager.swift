@@ -20,14 +20,12 @@ class HitTestManager {
     func setContainerFrame(_ frame: CGRect, notchState: NotchState) {
         // Ignore invalid frames (zero or negative dimensions)
         guard frame.width > 0 && frame.height > 0 else {
-            print("📏 [HitTestManager] Ignoring invalid frame: \(frame)")
             return
         }
 
         collapsedZoneFrame = frame
         expandedZoneFrame = frame
         currentState = notchState
-        print("📏 [HitTestManager] setContainerFrame called with state: \(notchState), frame: \(frame)")
     }
 
     func getCurrentFrame() -> CGRect? {
@@ -188,7 +186,6 @@ class FloatingWindowManager: ObservableObject {
     private init() {}
 
     func createFloatingPanel(modelContainer: ModelContainer) {
-        print("📦 Creating floating panel...")
         self.modelContainer = modelContainer
 
         // Create panel with fixed size (680x1200)
@@ -200,8 +197,6 @@ class FloatingWindowManager: ObservableObject {
             backing: .buffered,
             defer: false
         )
-
-        print("🎨 Configuring panel appearance...")
 
         // Transparency and visual settings
         panel.backgroundColor = .clear
@@ -233,8 +228,6 @@ class FloatingWindowManager: ObservableObject {
         // Don't hide when clicking elsewhere
         panel.hidesOnDeactivate = false
 
-        print("🎭 Creating NotchView...")
-
         // Create NotchView with model container
         let notchView = NotchView()
             .modelContainer(modelContainer)
@@ -252,12 +245,8 @@ class FloatingWindowManager: ObservableObject {
 
         self.panel = panel
 
-        print("📍 Positioning at notch...")
         // Position at notch
         NotchPositioner.positionAtNotch(window: panel)
-
-        print("✅ Panel frame: \(panel.frame)")
-        print("✅ Panel level: \(panel.level.rawValue)")
 
         // Observe screen changes
         NotificationCenter.default.addObserver(
@@ -274,11 +263,9 @@ class FloatingWindowManager: ObservableObject {
     }
 
     func show() {
-        print("👁️ Showing panel...")
         panel?.makeKeyAndOrderFront(nil)
         panel?.orderFrontRegardless()
         isVisible = true
-        print("✅ Panel should be visible now at: \(panel?.frame ?? .zero)")
     }
 
     func makeKey() {
@@ -286,7 +273,6 @@ class FloatingWindowManager: ObservableObject {
     }
 
     func hide() {
-        print("🙈 Hiding panel...")
         panel?.orderOut(nil)
         isVisible = false
     }

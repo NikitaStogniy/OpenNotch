@@ -155,6 +155,16 @@
 "calendar.event.all_day" = "Ամբողջ օրը";
 "calendar.event.untitled" = "Անանուն իրադարձություն";
 "calendar.day.empty" = "Այս օրը իրադարձություններ չկան";
+"calendar.mode.month" = "Ա";
+"calendar.mode.week" = "Շ";
+"calendar.mode.day" = "Օ";
+"calendar.weekday.sun" = "Կի";
+"calendar.weekday.mon" = "Եր";
+"calendar.weekday.tue" = "Եք";
+"calendar.weekday.wed" = "Չք";
+"calendar.weekday.thu" = "Հս";
+"calendar.weekday.fri" = "Ուր";
+"calendar.weekday.sat" = "Շբ";
 
 // MARK: - Module: Media Controller
 "module.mediacontroller.name" = "Մեդիա վերահսկիչ";

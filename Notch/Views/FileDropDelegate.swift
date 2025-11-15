@@ -58,12 +58,8 @@ struct FileDropDelegate: DropDelegate {
             item.loadItem(forTypeIdentifier: UTType.fileURL.identifier, options: nil) { (urlData, error) in
                 DispatchQueue.main.async {
                     // Check for errors from file promise resolution
-                    if let error = error {
+                    if error != nil {
                         // This error is expected for some file promises that can't be resolved
-                        // Only log in debug mode to avoid console spam
-                        #if DEBUG
-                        print("⚠️ Could not load file URL (this is normal for some apps): \(error.localizedDescription)")
-                        #endif
                         return
                     }
 
@@ -74,10 +70,6 @@ struct FileDropDelegate: DropDelegate {
                     } else if let url = urlData as? URL {
                         // Some providers return URL directly
                         addFile(from: url)
-                    } else {
-                        #if DEBUG
-                        print("⚠️ Could not create URL from dropped item data")
-                        #endif
                     }
                 }
             }
@@ -115,7 +107,7 @@ struct FileDropDelegate: DropDelegate {
             try modelContext.save()
 
         } catch {
-            print("Error adding file: \(error)")
+            // Silent error handling
         }
     }
 }

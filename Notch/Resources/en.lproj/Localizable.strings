@@ -155,6 +155,16 @@
 "calendar.event.all_day" = "All day";
 "calendar.event.untitled" = "Untitled Event";
 "calendar.day.empty" = "No events on this day";
+"calendar.mode.month" = "M";
+"calendar.mode.week" = "W";
+"calendar.mode.day" = "D";
+"calendar.weekday.sun" = "Su";
+"calendar.weekday.mon" = "Mo";
+"calendar.weekday.tue" = "Tu";
+"calendar.weekday.wed" = "We";
+"calendar.weekday.thu" = "Th";
+"calendar.weekday.fri" = "Fr";
+"calendar.weekday.sat" = "Sa";
 
 // MARK: - Module: Media Controller
 "module.mediacontroller.name" = "Media Controller";

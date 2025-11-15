@@ -52,8 +52,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var modelContainer: ModelContainer?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        print("🚀 App launched!")
-
         // Hide dock icon (MenuBarExtra should do this automatically, but ensure it)
         NSApp.setActivationPolicy(.accessory)
 
@@ -62,12 +60,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Model container will be set from NotchApp
         if let container = modelContainer {
-            print("✅ Creating floating panel...")
             floatingWindowManager?.createFloatingPanel(modelContainer: container)
             floatingWindowManager?.show()
-            print("✅ Floating panel created and shown!")
-        } else {
-            print("❌ Model container not available")
         }
     }
 

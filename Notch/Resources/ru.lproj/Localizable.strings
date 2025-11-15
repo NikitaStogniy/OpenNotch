@@ -155,6 +155,16 @@
 "calendar.event.all_day" = "Весь день";
 "calendar.event.untitled" = "Событие без названия";
 "calendar.day.empty" = "Нет событий в этот день";
+"calendar.mode.month" = "М";
+"calendar.mode.week" = "Н";
+"calendar.mode.day" = "Д";
+"calendar.weekday.sun" = "Вс";
+"calendar.weekday.mon" = "Пн";
+"calendar.weekday.tue" = "Вт";
+"calendar.weekday.wed" = "Ср";
+"calendar.weekday.thu" = "Чт";
+"calendar.weekday.fri" = "Пт";
+"calendar.weekday.sat" = "Сб";
 
 // MARK: - Module: Media Controller
 "module.mediacontroller.name" = "Медиа-контроллер";

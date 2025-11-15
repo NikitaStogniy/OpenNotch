@@ -54,13 +54,11 @@ class CameraManager: NSObject {
 
     func startSession() {
         guard isAuthorized else {
-            print("⚠️ Camera not authorized")
             checkAuthorization()
             return
         }
 
         guard captureSession == nil else {
-            print("ℹ️ Session already running")
             return
         }
 
@@ -77,7 +75,6 @@ class CameraManager: NSObject {
 
         // Find the front camera
         guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) else {
-            print("⚠️ Could not find front camera")
             DispatchQueue.main.async { [weak self] in
                 self?.errorMessage = "Front camera not found"
             }
@@ -91,7 +88,6 @@ class CameraManager: NSObject {
             if session.canAddInput(videoInput) {
                 session.addInput(videoInput)
             } else {
-                print("⚠️ Cannot add video input")
                 DispatchQueue.main.async { [weak self] in
                     self?.errorMessage = "Cannot add video input"
                 }
@@ -99,7 +95,6 @@ class CameraManager: NSObject {
                 return
             }
         } catch {
-            print("⚠️ Could not create video input: \(error)")
             DispatchQueue.main.async { [weak self] in
                 self?.errorMessage = "Error: \(error.localizedDescription)"
             }
@@ -125,7 +120,6 @@ class CameraManager: NSObject {
 
         DispatchQueue.main.async { [weak self] in
             self?.isSessionRunning = session.isRunning
-            print("✅ Camera session started: \(session.isRunning)")
         }
     }
 
@@ -136,7 +130,6 @@ class CameraManager: NSObject {
             session.stopRunning()
             DispatchQueue.main.async {
                 self?.isSessionRunning = false
-                print("🛑 Camera session stopped")
             }
         }
     }

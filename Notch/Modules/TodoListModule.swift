@@ -54,7 +54,18 @@ struct TodoCollapsedView: View {
 // MARK: - Expanded View
 struct TodoExpandedView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \TodoItem.dateCreated, order: .reverse) private var todos: [TodoItem]
+    @Query private var allTodos: [TodoItem]
+
+    private var todos: [TodoItem] {
+        allTodos.sorted { todo1, todo2 in
+            // First, sort by completion status (incomplete tasks first)
+            if todo1.isCompleted != todo2.isCompleted {
+                return !todo1.isCompleted // false (incomplete) comes before true (completed)
+            }
+            // Then sort by date (newer first)
+            return todo1.dateCreated > todo2.dateCreated
+        }
+    }
     @StateObject private var settings = SettingsManager.shared
     @State private var newTaskText = ""
 
@@ -121,7 +132,9 @@ struct TodoExpandedView: View {
     }
 
     private func toggleTask(_ todo: TodoItem) {
-        todo.isCompleted.toggle()
+        withAnimation(.spring()) {
+            todo.isCompleted.toggle()
+        }
     }
 
     private func deleteTask(_ todo: TodoItem) {
@@ -157,9 +170,8 @@ struct TodoExpandedView: View {
 
         do {
             try modelContext.delete(model: TodoItem.self, where: completedPredicate)
-            print("✅ Daily cleanup: Removed completed tasks")
         } catch {
-            print("❌ Failed to cleanup completed tasks: \(error.localizedDescription)")
+            // Silent error handling
         }
     }
 }

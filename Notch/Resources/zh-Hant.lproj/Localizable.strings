@@ -155,6 +155,16 @@
 "calendar.event.all_day" = "全天";
 "calendar.event.untitled" = "未命名事件";
 "calendar.day.empty" = "這一天沒有事件";
+"calendar.mode.month" = "月";
+"calendar.mode.week" = "週";
+"calendar.mode.day" = "日";
+"calendar.weekday.sun" = "日";
+"calendar.weekday.mon" = "一";
+"calendar.weekday.tue" = "二";
+"calendar.weekday.wed" = "三";
+"calendar.weekday.thu" = "四";
+"calendar.weekday.fri" = "五";
+"calendar.weekday.sat" = "六";
 
 // MARK: - Module: Media Controller
 "module.mediacontroller.name" = "媒體控制器";

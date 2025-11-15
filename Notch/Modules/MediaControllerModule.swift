@@ -112,25 +112,16 @@ class MediaControllerModule: NotchModule, ObservableObject {
                 var error: NSDictionary?
                 if let scriptObject = NSAppleScript(source: musicScript) {
                     let output = scriptObject.executeAndReturnError(&error)
-                    if let err = error {
-                        print("🎵 [MediaController] Music AppleScript error: \(err)")
-                    }
                     if let result = output.stringValue {
-                        // Only log errors and successful detections
-                        if result.starts(with: "error:") {
-                            print("🎵 [MediaController] Music returned error: \(result)")
-                        } else if !result.isEmpty && result != "not_running" && result != "not_playing" {
+                        if !result.isEmpty && result != "not_running" && result != "not_playing" && !result.starts(with: "error:") {
                             let components = result.components(separatedBy: "|||")
                             if components.count >= 2 {
                                 trackTitle = components[0]
                                 trackArtist = components[1]
                                 foundMedia = true
-                                print("🎵 [MediaController] Music playing: \(trackTitle) by \(trackArtist)")
 
                                 // Try to get artwork
                                 artworkData = self.getArtworkFromMusic()
-                            } else {
-                                print("🎵 [MediaController] Music: Invalid track format, components: \(components.count)")
                             }
                         }
                     }
@@ -163,25 +154,16 @@ class MediaControllerModule: NotchModule, ObservableObject {
                 var error: NSDictionary?
                 if let scriptObject = NSAppleScript(source: spotifyScript) {
                     let output = scriptObject.executeAndReturnError(&error)
-                    if let err = error {
-                        print("🎵 [MediaController] Spotify AppleScript error: \(err)")
-                    }
                     if let result = output.stringValue {
-                        // Only log errors and successful detections
-                        if result.starts(with: "error:") {
-                            print("🎵 [MediaController] Spotify returned error: \(result)")
-                        } else if !result.isEmpty && result != "not_running" && result != "not_playing" {
+                        if !result.isEmpty && result != "not_running" && result != "not_playing" && !result.starts(with: "error:") {
                             let components = result.components(separatedBy: "|||")
                             if components.count >= 2 {
                                 trackTitle = components[0]
                                 trackArtist = components[1]
                                 foundMedia = true
-                                print("🎵 [MediaController] Spotify playing: \(trackTitle) by \(trackArtist)")
 
                                 // Try to get artwork
                                 artworkData = self.getArtworkFromSpotify()
-                            } else {
-                                print("🎵 [MediaController] Spotify: Invalid track format, components: \(components.count)")
                             }
                         }
                     }
@@ -191,10 +173,6 @@ class MediaControllerModule: NotchModule, ObservableObject {
             // Update UI on main thread
             DispatchQueue.main.async {
                 if foundMedia {
-                    // Only log when starting to play
-                    if !self.isPlaying {
-                        print("🎵 [MediaController] Media started playing - \(trackTitle) by \(trackArtist)")
-                    }
                     self.isPlaying = true
                     self.playbackRate = 1.0
                     self.songTitle = trackTitle
@@ -202,15 +180,8 @@ class MediaControllerModule: NotchModule, ObservableObject {
 
                     if let data = artworkData, let image = NSImage(data: data) {
                         self.albumArt = image
-                        print("🎵 [MediaController] Album art loaded successfully")
-                    } else {
-                        print("🎵 [MediaController] No album art available")
                     }
                 } else {
-                    // Only log when stopping
-                    if self.isPlaying {
-                        print("🎵 [MediaController] Media stopped playing (no media found in poll)")
-                    }
                     self.isPlaying = false
                     self.playbackRate = 0.0
                 }

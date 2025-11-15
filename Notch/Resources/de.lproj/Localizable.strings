@@ -155,6 +155,16 @@
 "calendar.event.all_day" = "Ganztägig";
 "calendar.event.untitled" = "Unbenanntes Ereignis";
 "calendar.day.empty" = "Keine Ereignisse an diesem Tag";
+"calendar.mode.month" = "M";
+"calendar.mode.week" = "W";
+"calendar.mode.day" = "T";
+"calendar.weekday.sun" = "So";
+"calendar.weekday.mon" = "Mo";
+"calendar.weekday.tue" = "Di";
+"calendar.weekday.wed" = "Mi";
+"calendar.weekday.thu" = "Do";
+"calendar.weekday.fri" = "Fr";
+"calendar.weekday.sat" = "Sa";
 
 // MARK: - Module: Media Controller
 "module.mediacontroller.name" = "Mediensteuerung";

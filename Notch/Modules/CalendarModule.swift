@@ -13,6 +13,14 @@ enum CalendarViewMode: String, CaseIterable {
     case month = "M"
     case week = "W"
     case day = "D"
+
+    var localizedShort: String {
+        switch self {
+        case .month: return NSLocalizedString("calendar.mode.month", comment: "")
+        case .week: return NSLocalizedString("calendar.mode.week", comment: "")
+        case .day: return NSLocalizedString("calendar.mode.day", comment: "")
+        }
+    }
 }
 
 // MARK: - Event Section
@@ -70,28 +78,19 @@ class CalendarModule: NotchModule, ObservableObject {
     }
 
     func requestAccess() {
-        print("🔐 CalendarModule: requestAccess() called")
-        print("🔐 Current authorization status: \(authorizationStatus.rawValue)")
-
         if #available(macOS 14.0, *) {
-            print("🔐 Requesting full access (macOS 14+)")
             eventStore.requestFullAccessToEvents { [weak self] granted, error in
-                print("🔐 Full access callback: granted=\(granted), error=\(String(describing: error))")
                 DispatchQueue.main.async {
                     self?.authorizationStatus = granted ? .fullAccess : .denied
-                    print("🔐 Updated status to: \(self?.authorizationStatus.rawValue ?? -1)")
                     if granted {
                         self?.fetchUpcomingEvents()
                     }
                 }
             }
         } else {
-            print("🔐 Requesting access (legacy)")
             eventStore.requestAccess(to: .event) { [weak self] granted, error in
-                print("🔐 Access callback: granted=\(granted), error=\(String(describing: error))")
                 DispatchQueue.main.async {
                     self?.authorizationStatus = granted ? .authorized : .denied
-                    print("🔐 Updated status to: \(self?.authorizationStatus.rawValue ?? -1)")
                     if granted {
                         self?.fetchUpcomingEvents()
                     }
@@ -177,7 +176,6 @@ struct CalendarExpandedViewWrapper: View {
         CalendarExpandedView(
             module: module,
             onRequestAccess: {
-                print("🔘 Wrapper calling module.requestAccess()")
                 module.requestAccess()
             },
             onRefresh: {
@@ -211,13 +209,13 @@ struct CalendarCollapsedView: View {
     }
 
     var body: some View {
-        VStack(spacing: 1) {
+        VStack(spacing: 0) {
             Text(weekdayAbbrev)
                 .font(.system(size: 7, weight: .medium))
                 .foregroundColor(.white.opacity(0.5))
 
             Text(dayNumber)
-                .font(.system(size: 14, weight: .bold))
+                .font(.system(size: 10, weight: .bold))
                 .foregroundColor(.white)
 
             Text(monthAbbrev)
@@ -350,7 +348,7 @@ struct CalendarExpandedView: View {
                 HStack(spacing: 2) {
                     ForEach(CalendarViewMode.allCases, id: \.self) { mode in
                         Button(action: { module.viewMode = mode }) {
-                            Text(mode.rawValue)
+                            Text(mode.localizedShort)
                                 .font(.system(size: 10, weight: module.viewMode == mode ? .bold : .regular))
                                 .foregroundColor(module.viewMode == mode ? .white : .white.opacity(0.5))
                                 .frame(width: 20, height: 20)
@@ -416,7 +414,6 @@ struct CalendarExpandedView: View {
                                     .multilineTextAlignment(.center)
 
                                 Button(action: {
-                                    print("🔘 Grant Access button pressed")
                                     onRequestAccess()
                                 }) {
                                     Text(NSLocalizedString("calendar.permission.grant", comment: ""))
@@ -517,7 +514,17 @@ struct CalendarGridView: View {
         return dates
     }
 
-    private let weekdaySymbols = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+    private var weekdaySymbols: [String] {
+        [
+            NSLocalizedString("calendar.weekday.sun", comment: ""),
+            NSLocalizedString("calendar.weekday.mon", comment: ""),
+            NSLocalizedString("calendar.weekday.tue", comment: ""),
+            NSLocalizedString("calendar.weekday.wed", comment: ""),
+            NSLocalizedString("calendar.weekday.thu", comment: ""),
+            NSLocalizedString("calendar.weekday.fri", comment: ""),
+            NSLocalizedString("calendar.weekday.sat", comment: "")
+        ]
+    }
 
     var body: some View {
         VStack(spacing: 8) {

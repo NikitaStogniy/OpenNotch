@@ -44,17 +44,9 @@ struct MiniIconView: View {
 /// Preview provider for MiniIconView
 #Preview {
     HStack(spacing: 12) {
-        MiniIconView(module: CalendarModule()) {
-            print("Calendar tapped")
-        }
-
-        MiniIconView(module: TodoListModule()) {
-            print("Todo tapped")
-        }
-
-        MiniIconView(module: MediaControllerModule()) {
-            print("Media tapped")
-        }
+        MiniIconView(module: CalendarModule()) { }
+        MiniIconView(module: TodoListModule()) { }
+        MiniIconView(module: MediaControllerModule()) { }
     }
     .padding()
     .background(Color.black)

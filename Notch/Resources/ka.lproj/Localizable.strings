@@ -155,6 +155,16 @@
 "calendar.event.all_day" = "მთელი დღე";
 "calendar.event.untitled" = "უსახელო მოვლენა";
 "calendar.day.empty" = "ამ დღეს მოვლენები არ არის";
+"calendar.mode.month" = "თ";
+"calendar.mode.week" = "კ";
+"calendar.mode.day" = "დ";
+"calendar.weekday.sun" = "კვ";
+"calendar.weekday.mon" = "ორ";
+"calendar.weekday.tue" = "სა";
+"calendar.weekday.wed" = "ოთ";
+"calendar.weekday.thu" = "ხუ";
+"calendar.weekday.fri" = "პა";
+"calendar.weekday.sat" = "შა";
 
 // MARK: - Module: Media Controller
 "module.mediacontroller.name" = "მედია კონტროლერი";
